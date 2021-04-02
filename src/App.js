@@ -52,16 +52,32 @@ class App extends React.Component {
     set_perpective(idx) {
         const parsed_idx = parseInt(idx);
         const new_reference_velocity = this.state.observers[parsed_idx].relative_velocity;
-        this.setState({
-            perspective: parseInt(idx),
-            observers: this.state.observers.map(observer => {
-                return {
-                    name: observer.name,
-                    relative_velocity: (observer.relative_velocity - new_reference_velocity) / (1 - observer.relative_velocity*new_reference_velocity),
-                    proper_time: observer.proper_time
-                }
-            })
+        this.accelerate_to(new_reference_velocity);
+    }
+
+    accelerate_to(velocity) {
+        const initial_velocities = this.state.observers.map(observer => observer.relative_velocity);
+        const final_velocities = this.state.observers.map(observer => {
+            return (observer.relative_velocity - velocity) / (1 - observer.relative_velocity*velocity);
         });
+        const velocity_diffs = initial_velocities.map((v, idx) => final_velocities[idx]-v);
+        let counter = 0;
+        const interval_id = setInterval(() => {
+            if(counter === 10) {
+                clearInterval(interval_id);
+            } else {
+                counter += 1;
+                this.setState({
+                    observers: this.state.observers.map((observer, idx) => {
+                        return {
+                            name: observer.name,
+                            relative_velocity: initial_velocities[idx]+velocity_diffs[idx]*(counter/10),
+                            proper_time: observer.proper_time
+                        }
+                    })
+                });
+            }
+        }, 20);
     }
 
     get_spacetime_intervals(observer, interval=1, max=10) {
