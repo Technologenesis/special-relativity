@@ -53,6 +53,7 @@ class App extends React.Component {
         const parsed_idx = parseInt(idx);
         const new_reference_velocity = this.state.observers[parsed_idx].relative_velocity;
         this.accelerate_to(new_reference_velocity);
+        this.setState({perspective: parsed_idx});
     }
 
     accelerate_to(velocity) {
@@ -64,14 +65,24 @@ class App extends React.Component {
         let counter = 0;
         const interval_id = setInterval(() => {
             if(counter === 10) {
+                this.setState({
+                    observers: this.state.observers.map((observer, idx) => {
+                        return {
+                            name: observer.name,
+                            relative_velocity: final_velocities[idx],
+                            proper_time: observer.proper_time
+                        }
+                    })
+                });
                 clearInterval(interval_id);
             } else {
                 counter += 1;
                 this.setState({
                     observers: this.state.observers.map((observer, idx) => {
+                        const new_rel_vel = initial_velocities[idx]+velocity_diffs[idx]*(counter/10);
                         return {
                             name: observer.name,
-                            relative_velocity: initial_velocities[idx]+velocity_diffs[idx]*(counter/10),
+                            relative_velocity: new_rel_vel,
                             proper_time: observer.proper_time
                         }
                     })
@@ -119,7 +130,7 @@ class App extends React.Component {
                         }
                     </select></label><br/>
                     {this.state.observers.map((observer, idx) => this.state.perspective !== idx ? (
-                        <label key={idx}>V<sub>{observer.name}</sub>: <input type="range" min="-.999" max=".999" step=".01" value={this.state.observers[idx].relative_velocity} onChange={event => this.set_relative_velocity(idx, event.target.value)}/><br/></label>
+                        <label key={idx}>V<sub>{observer.name}</sub>: <input type="range" min="-.95" max=".95" step=".01" value={this.state.observers[idx].relative_velocity} onChange={event => this.set_relative_velocity(idx, event.target.value)}/><br/></label>
                     ) : null)}
                 </form>
                 <XYPlot width={500} height={500} yDomain={[time, time+10]} xDomain={[-10,10]}>
