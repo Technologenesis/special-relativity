@@ -1,6 +1,6 @@
 # Special Relativity Visualizer
 
-## How It Works</h2>
+## How It Works
 What you are looking at is a moving "Spacetime Diagram".  It shows the velocity of objects through
 spacetime.
 
