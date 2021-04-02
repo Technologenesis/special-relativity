@@ -4,91 +4,97 @@ import {XYPlot, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, LineMarkSe
 import '../node_modules/react-vis/dist/style.css';
 
 class App extends React.Component {
+    static defaultProps = {
+        animation_step: .02,
+        perspective_shift_animation_length: .2
+    }
+
     constructor(props) {
         super(props);
         this.state = {
             perspective: 0,
+            paused: false,
             observers: [
                 {
                     name: "Observer A",
                     relative_velocity: 0,
-                    proper_time: 0
+                    proper_time: 0,
+                    acceleration: null
                 },
                 {
                     name: "Observer B",
                     relative_velocity: 0.5,
-                    proper_time: 0
+                    proper_time: 0,
+                    acceleration: null
                 },
                 {
                     name: "Observer C",
                     relative_velocity: -0.5,
-                    proper_time: 0
+                    proper_time: 0,
+                    acceleration: null
                 }
         ]};
         this.set_relative_velocity = this.set_relative_velocity.bind(this);
         this.lorentzian_transform = this.lorentzian_transform.bind(this);
+        this.togglePaused = this.togglePaused.bind(this);
     }
 
     componentDidMount() {
         setInterval(() => {
             this.setState({
-                observers: this.state.observers.map(observer => {
+                observers: this.state.observers.map((observer) => {
+                    let new_vel = observer.relative_velocity;
+                    let new_accel = observer.acceleration;
+                    if(new_accel != null) {
+                        const acceleration_sign = new_accel.rate < 0;
+                        new_vel = observer.acceleration ? observer.relative_velocity +observer.acceleration.rate*this.props.animation_step :
+                            observer.relative_velocity;
+                        const diff_sign = new_accel.final - new_vel < 0;
+                        if(acceleration_sign !== diff_sign) {
+                            new_vel = observer.acceleration.final;
+                            new_accel = null;
+                        }
+                    }
+
                     return {
-                        name: observer.name,
-                        relative_velocity: observer.relative_velocity,
-                        proper_time: observer.proper_time + .05/this.gamma(observer.relative_velocity)
+                        proper_time: this.state.paused ? observer.proper_time : observer.proper_time + this.props.animation_step/this.gamma(observer.relative_velocity),
+                        relative_velocity: new_vel,
+                        acceleration: new_accel,
+                        name: observer.name
                     }
                 })
             })
-        }, 50);
+        }, this.props.animation_step*1000);
     }
 
     set_relative_velocity(idx, velocity) {
         let observers = this.state.observers;
-        observers[idx].relative_velocity = velocity;
+        observers[idx].relative_velocity = parseFloat(velocity);
         this.setState({observers: observers});
     }
 
-    set_perpective(idx) {
+    set_perspective(idx) {
         const parsed_idx = parseInt(idx);
-        const new_reference_velocity = this.state.observers[parsed_idx].relative_velocity;
-        this.accelerate_to(new_reference_velocity);
-        this.setState({perspective: parsed_idx});
-    }
-
-    accelerate_to(velocity) {
-        const initial_velocities = this.state.observers.map(observer => observer.relative_velocity);
+        const velocity = this.state.observers[parsed_idx].relative_velocity;
         const final_velocities = this.state.observers.map(observer => {
             return (observer.relative_velocity - velocity) / (1 - observer.relative_velocity*velocity);
         });
-        const velocity_diffs = initial_velocities.map((v, idx) => final_velocities[idx]-v);
-        let counter = 0;
-        const interval_id = setInterval(() => {
-            if(counter === 10) {
-                this.setState({
-                    observers: this.state.observers.map((observer, idx) => {
-                        return {
-                            name: observer.name,
-                            relative_velocity: final_velocities[idx],
-                            proper_time: observer.proper_time
-                        }
-                    })
-                });
-                clearInterval(interval_id);
-            } else {
-                counter += 1;
-                this.setState({
-                    observers: this.state.observers.map((observer, idx) => {
-                        const new_rel_vel = initial_velocities[idx]+velocity_diffs[idx]*(counter/10);
-                        return {
-                            name: observer.name,
-                            relative_velocity: new_rel_vel,
-                            proper_time: observer.proper_time
-                        }
-                    })
-                });
-            }
-        }, 20);
+        this.setState({
+            observers:final_velocities.map((vel, idx) => {
+                const observer = this.state.observers[idx];
+                const acceleration = {
+                    rate: (vel-observer.relative_velocity)/this.props.perspective_shift_animation_length,
+                    final: vel
+                };
+                return {
+                    name: observer.name,
+                    relative_velocity: observer.relative_velocity,
+                    proper_time: observer.proper_time,
+                    acceleration: acceleration
+                }
+            }),
+            perspective: parsed_idx
+        });
     }
 
     get_spacetime_intervals(observer, interval=1, max=10) {
@@ -117,12 +123,16 @@ class App extends React.Component {
         return 1/Math.sqrt(1-velocity**2);
     }
 
+    togglePaused() {
+        this.setState({paused: !this.state.paused});
+    }
+
     render() {
         const time = this.state.observers[this.state.perspective].proper_time;
         return (
             <div>
                 <form>
-                    <label>Reference Frame: <select name="perspective" onChange={event => this.set_perpective(event.target.value)}>
+                    <label>Reference Frame: <select name="perspective" onChange={event => this.set_perspective(event.target.value)}>
                         {
                             this.state.observers.map((observer, idx) => (
                                 <option key={idx} value={idx}>{observer.name}</option>
@@ -146,6 +156,9 @@ class App extends React.Component {
                     <LineSeries data={[{x: 0, y: time}, {x:  10, y: time+10}]}/>
                     <LineSeries data={[{x: 0, y: time}, {x: -10, y: time+10}]}/>
                 </XYPlot>
+
+                <button onClick={this.togglePaused}>Pause</button>
+
                 <h2>How It Works</h2>
                 <p>
                     What you are looking at is a moving "Spacetime Diagram".  It shows the velocity of objects through
