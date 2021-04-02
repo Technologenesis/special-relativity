@@ -11,19 +11,16 @@ class App extends React.Component {
             observers: [
                 {
                     name: "Observer A",
-                    x: 0,
                     relative_velocity: 0,
                     proper_time: 0
                 },
                 {
                     name: "Observer B",
-                    x: 0,
                     relative_velocity: 0.5,
                     proper_time: 0
                 },
                 {
                     name: "Observer C",
-                    x: 0,
                     relative_velocity: -0.5,
                     proper_time: 0
                 }
@@ -60,7 +57,8 @@ class App extends React.Component {
             observers: this.state.observers.map(observer => {
                 return {
                     name: observer.name,
-                    relative_velocity: (observer.relative_velocity - new_reference_velocity) / (1 - observer.relative_velocity*new_reference_velocity)
+                    relative_velocity: (observer.relative_velocity - new_reference_velocity) / (1 - observer.relative_velocity*new_reference_velocity),
+                    proper_time: observer.proper_time
                 }
             })
         });
