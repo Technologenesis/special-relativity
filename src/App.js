@@ -140,7 +140,7 @@ class App extends React.Component {
                         }
                     </select></label><br/>
                     {this.state.observers.map((observer, idx) => this.state.perspective !== idx ? (
-                        <label key={idx}>V<sub>{observer.name}</sub>: <input type="range" min="-.95" max=".95" step=".01" value={this.state.observers[idx].relative_velocity} onChange={event => this.set_relative_velocity(idx, event.target.value)}/><br/></label>
+                        <label key={idx}>V<sub>{observer.name}</sub>: <input type="range" min="-.999" max=".999" step=".01" value={this.state.observers[idx].relative_velocity} onChange={event => this.set_relative_velocity(idx, event.target.value)}/>{this.state.observers[idx].relative_velocity}<br/></label>
                     ) : null)}
                 </form>
                 <XYPlot width={500} height={500} yDomain={[time, time+10]} xDomain={[-10,10]}>
