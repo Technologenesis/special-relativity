@@ -1,164 +1,177 @@
 import './App.css';
+import SpacetimeDiagram from "./SpacetimeDiagram";
 import * as React from "react";
-import {XYPlot, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, LineMarkSeries, LineSeries} from 'react-vis';
 import '../node_modules/react-vis/dist/style.css';
 
 class App extends React.Component {
-    static defaultProps = {
-        paused: true,
-        animation_step: .02,
-        perspective_shift_animation_length: .2
-    }
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            perspective: 0,
-            paused: props.paused,
-            observers: [
-                {
-                    name: "Observer A",
-                    relative_velocity: 0,
-                    proper_time: 0,
-                    acceleration: null
-                },
-                {
-                    name: "Observer B",
-                    relative_velocity: 0.5,
-                    proper_time: 0,
-                    acceleration: null
-                },
-                {
-                    name: "Observer C",
-                    relative_velocity: -0.5,
-                    proper_time: 0,
-                    acceleration: null
-                }
-        ]};
-        this.set_relative_velocity = this.set_relative_velocity.bind(this);
-        this.lorentzian_transform = this.lorentzian_transform.bind(this);
-        this.togglePaused = this.togglePaused.bind(this);
-    }
-
-    componentDidMount() {
-        setInterval(() => {
-            this.setState({
-                observers: this.state.observers.map((observer) => {
-                    let new_vel = observer.relative_velocity;
-                    let new_accel = observer.acceleration;
-                    if(new_accel != null) {
-                        const acceleration_sign = new_accel.rate < 0;
-                        new_vel = observer.acceleration ? observer.relative_velocity +observer.acceleration.rate*this.props.animation_step :
-                            observer.relative_velocity;
-                        const diff_sign = new_accel.final - new_vel < 0;
-                        if(acceleration_sign !== diff_sign) {
-                            new_vel = observer.acceleration.final;
-                            new_accel = null;
-                        }
-                    }
-
-                    return {
-                        proper_time: this.state.paused ? observer.proper_time : observer.proper_time + this.props.animation_step/this.gamma(observer.relative_velocity),
-                        relative_velocity: new_vel,
-                        acceleration: new_accel,
-                        name: observer.name
-                    }
-                })
-            })
-        }, this.props.animation_step*1000);
-    }
-
-    set_relative_velocity(idx, velocity) {
-        let observers = this.state.observers;
-        observers[idx].relative_velocity = parseFloat(velocity);
-        this.setState({observers: observers});
-    }
-
-    set_perspective(idx) {
-        const parsed_idx = parseInt(idx);
-        const velocity = this.state.observers[parsed_idx].relative_velocity;
-        const final_velocities = this.state.observers.map(observer => {
-            return (observer.relative_velocity - velocity) / (1 - observer.relative_velocity*velocity);
-        });
-        this.setState({
-            observers:final_velocities.map((vel, idx) => {
-                const observer = this.state.observers[idx];
-                const acceleration = {
-                    rate: (vel-observer.relative_velocity)/this.props.perspective_shift_animation_length,
-                    final: vel
-                };
-                return {
-                    name: observer.name,
-                    relative_velocity: observer.relative_velocity,
-                    proper_time: observer.proper_time,
-                    acceleration: acceleration
-                }
-            }),
-            perspective: parsed_idx
-        });
-    }
-
-    get_spacetime_intervals(observer, interval=1, max=10) {
-        let data = [];
-        const current_proper_time = this.state.observers[this.state.perspective].proper_time;
-        const frame_interval = this.gamma(observer.relative_velocity); // denotes the time interval in the current reference frame between ticks
-        const frame_offset = current_proper_time+(interval-(observer.proper_time%interval))*this.gamma(observer.relative_velocity);
-        data.push({x: 0, y: current_proper_time});
-        let idx=0;
-        let tick_time_in_current_frame = frame_offset + idx*frame_interval;
-        while(tick_time_in_current_frame <= current_proper_time + max) { // until we hit the top of the graph,
-            data.push({x: observer.relative_velocity*(tick_time_in_current_frame-current_proper_time), y: tick_time_in_current_frame}); // push the next tick onto the worldline
-            idx += 1;
-            tick_time_in_current_frame = frame_offset + idx*frame_interval;
-        }
-        data.push({x: observer.relative_velocity*(tick_time_in_current_frame - current_proper_time), y: tick_time_in_current_frame}); // one more push to make sure the line fills the whole graph
-        return data;
-    }
-
-    lorentzian_transform(velocity) {
-        const gamma = 1/Math.sqrt(1-velocity**2);
-        return {x_prime: (x, t) => gamma*(x-velocity*t), t_prime: (x, t) => gamma*(t-velocity*x)};
-    }
-
-    gamma(velocity) {
-        return 1/Math.sqrt(1-velocity**2);
-    }
-
-    togglePaused() {
-        this.setState({paused: !this.state.paused});
-    }
-
     render() {
-        const time = this.state.observers[this.state.perspective].proper_time;
         return (
             <div>
-                <form>
-                    <label>Reference Frame: <select name="perspective" onChange={event => this.set_perspective(event.target.value)}>
-                        {
-                            this.state.observers.map((observer, idx) => (
-                                <option key={idx} value={idx}>{observer.name}</option>
-                            ))
-                        }
-                    </select></label><br/>
-                    {this.state.observers.map((observer, idx) => this.state.perspective !== idx ? (
-                        <label key={idx}>V<sub>{observer.name}</sub>: <input type="range" min="-.999" max=".999" step=".01" value={this.state.observers[idx].relative_velocity} onChange={event => this.set_relative_velocity(idx, event.target.value)}/>{this.state.observers[idx].relative_velocity}<br/></label>
-                    ) : null)}
-                </form>
-                <XYPlot width={500} height={500} yDomain={[time, time+10]} xDomain={[-10,10]}>
-                    <VerticalGridLines />
-                    <HorizontalGridLines />
-                    <XAxis title={"Space (light-seconds)"}/>
-                    <YAxis title={"Time (seconds)"} position="middle"/>
-                    {
-                        this.state.observers.map((observer, idx) => (
-                            <LineMarkSeries key={idx} data={this.get_spacetime_intervals(observer)} className={observer.name}/>
-                        ))
-                    }
-                    <LineSeries data={[{x: 0, y: time}, {x:  10, y: time+10}]}/>
-                    <LineSeries data={[{x: 0, y: time}, {x: -10, y: time+10}]}/>
-                </XYPlot>
+                <h1>Special Relativity Visualizer</h1>
 
-                <button onClick={this.togglePaused}>{this.state.paused ? "Play" : "Pause"}</button>
+                <SpacetimeDiagram observers={[
+                    {
+                        name: "Observer A",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    },
+                    {
+                        name: "Observer B",
+                        proper_time: 0,
+                        relative_velocity: .5
+                    },
+                    {
+                        name: "Observer C",
+                        proper_time: 0,
+                        relative_velocity: -.5
+                    }
+                ]}/>
+
+                <p>Relativity gets a bit of a bad rap for being "difficult".  That's not to say it's exactly "easy", and
+                certainly not that it's intuitive.  It holds some extremely deep
+                insights into the nature of the world that challenge our everyday experience.  Einstein's name has
+                become synonymous with "genius" in part because he was able to come up with the theory from scratch.
+                But it was that part - "from scratch" - that earned him his fame.  Luckily for us, the trail is already
+                blazed.  If we want to get an intuition for relativity, we need only retrace the steps.</p>
+
+                <p>The goal of this site is to make the foundations of relativity - in particular, <b>special relativity
+                </b> and the inherent structure of <b>spacetime</b> - accessible through visualization.  After all, the
+                core insights of relativity are supposedly geometric in nature.  So why try to understand it by staring
+                at equations?</p>
+
+                <p>We'll build up to special relativity gradually, starting with a few "common sense" notions.</p>
+
+                <h2>Space and Time</h2>
+
+                <p>We will be using <b>spacetime diagrams</b> to visualize each step in our journey through Special
+                Relativity, so before we go any farther we should figure out how to use them.</p>
+
+                <p>A spacetime diagram is a sort of graph consisting of at least two axes: one for time, and at least one
+                for space.  On it, we chart the paths of various objects through <b>space</b> over <b>time</b>.  Here's
+                an example:</p>
+
+                <SpacetimeDiagram allowPausing={false} showFrameSelector={false} showTimeDots={false} showControls={false} showLightRays={false} spaceUnits="meters" c={3e8} observers={[
+                    {
+                        name: "Observer A",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    },
+                    {
+                        name: "Observer B",
+                        proper_time: 0,
+                        relative_velocity: 5
+                    },
+                    {
+                        name: "Observer C",
+                        proper_time: 0,
+                        relative_velocity: -1
+                    }
+                ]}/>
+
+                <p>The above diagram shows three objects: one is stationary, one is moving to the right at 5 meters
+                per second, and the third is moving to the left at 1 meter per second.</p>
+
+                <p>This diagram is still very compatible with common-sense.  We have an axis for time which is totally
+                separate from our axis in space.  An object "moves" when its position in space changes based on its
+                position in time.  Furthermore, all objects experience time at the same "rate" - that is, a second is a
+                second is a second, no matter what velocity you're going.  To visualize this, look at the dots as they
+                move across the lines.  One dot represents the passing of one second for each object:</p>
+
+                <SpacetimeDiagram paused={false} showFrameSelector={false} showControls={false} showLightRays={false} spaceUnits="meters" c={3e8} observers={[
+                    {
+                        name: "Observer A",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    },
+                    {
+                        name: "Observer B",
+                        proper_time: 0,
+                        relative_velocity: 5
+                    },
+                    {
+                        name: "Observer C",
+                        proper_time: 0,
+                        relative_velocity: -1
+                    }
+                ]}/>
+
+                <p>Note that, although these objects are moving through space over time, their lines on the graph always
+                start at x=0 even as time passes.  In reality, these objects would be moving along the x axis at their
+                given velocity, but we will (usually) ignore this fact for the purpose of keeping all our objects neatly
+                within view, since it is not usually the positions we care about, but the velocities.</p>
+
+                <p>This simple diagram already puts us in a position to think about some of the things we'll be dealing
+                with as we explore relativity.  For instance, plotting space and time together calls into
+                question: just what is the stuff in the middle?  What is it that objects are "traversing" as time
+                passes?  And if we consider it as just one object, are distances in space and distances in time
+                unrelated?  These are the questions we will answer when we begin to discuss the geometry underlying the
+                universe itself - <b>spacetime</b>.</p>
+
+                <p>But let's not get too ahead of ourselves.  Now that we know what we'll be looking at, let's dive in
+                and see what the relativity scene looks like pre-Einstein.</p>
+
+                <h2>Galilean Relativity</h2>
+
+                <p>Although the word "relativity" is closely associated with Einstein's work, the concept predates him
+                by centuries.  Before Einstein, the word was most closely related to <b>Galileo's principle of
+                relativity</b>, which states that the laws of physics should apply equally regardless of <b>inertial
+                reference frame</b>. In other words, a person cruising along in a spaceship moving at a constant speed
+                follows the same physical laws as a stationary person.  Indeed, it should not be necessary, <i>nor even
+                possible</i>, for either of them to know which of them is moving.
+                </p>
+
+                <p>This sounds like a very simple principle, but it poses a couple of challenges for anyone tasked with
+                transcribing the physical laws of the universe.  For one, how do we write the laws of physics so that
+                they don't change if we transform our reference frame into a new one?  And for another, <i>how do we model
+                the change in reference frame</i> - that is, what actually happens when we change velocity?  In case the
+                italics didn't give it away, we'll be concerned with the second question here.</p>
+
+                <p>For a very long time, we thought we had a model that accurately described what happens when we change
+                velocity - basically just a formalization of the intuitive idea that velocities <i>add together</i> when we
+                change reference frames.  In concrete terms, Alice is riding a train moving at 9 meters per second
+                relative to Bob.  Alice throws an apple at 12 meters per second, relative to her, in the direction of the
+                train.  Bob therefore sees the apple moving at 21 meters per second.
+
+                Here's the same scenario in spacetime diagram form.  Try switching between perspectives to understand
+                this relationship and how it appears on the diagram:</p>
+
+                <SpacetimeDiagram paused={false} showControls={true} showLightRays={false} spaceUnits={"meters"} axisTicksX={80} c={3e8} observers={[
+                    {
+                        name: "Alice",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    },
+                    {
+                        name: "Bob",
+                        proper_time: 0,
+                        relative_velocity: -9
+                    },
+                    {
+                        name: "Apple",
+                        proper_time: 0,
+                        relative_velocity: 12
+                    }
+                ]}/>
+
+                <h2>A Rip in the Fabric</h2>
+
+                <SpacetimeDiagram paused={false} showLightRays={false} maxSpeed={10} spaceUnits="meters" c={3e8} observers={[
+                    {
+                        name: "Observer A",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    },
+                    {
+                        name: "Observer B",
+                        proper_time: 0,
+                        relative_velocity: 5
+                    },
+                    {
+                        name: "Observer C",
+                        proper_time: 0,
+                        relative_velocity: -1
+                    }
+                ]}/>
 
                 <h2>How It Works</h2>
                 <p>
@@ -166,10 +179,7 @@ class App extends React.Component {
                     spacetime.
                 </p>
                 <p>
-                    Use the "Reference Frame" selector to choose what speed will be considered the "zero" speed.
-                    The principle of relativity dictates that your choice of reference speed should *not* affect the
-                    nature of physical laws; this diagram demonstrates that.  Notice that regardless of reference frame,
-                    the speed of light remains constant.
+                    You mi
                 </p>
                 <p>
                     You can also adjust the relative speeds of various observers to demonstrate various relativistic
