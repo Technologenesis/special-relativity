@@ -5,6 +5,7 @@ import '../node_modules/react-vis/dist/style.css';
 
 class App extends React.Component {
     static defaultProps = {
+        paused: true,
         animation_step: .02,
         perspective_shift_animation_length: .2
     }
@@ -13,7 +14,7 @@ class App extends React.Component {
         super(props);
         this.state = {
             perspective: 0,
-            paused: false,
+            paused: props.paused,
             observers: [
                 {
                     name: "Observer A",
@@ -157,7 +158,7 @@ class App extends React.Component {
                     <LineSeries data={[{x: 0, y: time}, {x: -10, y: time+10}]}/>
                 </XYPlot>
 
-                <button onClick={this.togglePaused}>Pause</button>
+                <button onClick={this.togglePaused}>{this.state.paused ? "Play" : "Pause"}</button>
 
                 <h2>How It Works</h2>
                 <p>
