@@ -37,9 +37,11 @@ class App extends React.Component {
                 <p>The goal of this site is to make the foundations of relativity - in particular, <b>special relativity
                 </b> and the inherent structure of <b>spacetime</b> - accessible through visualization.  After all, the
                 core insights of relativity are supposedly geometric in nature.  So why try to understand it by staring
-                at equations?</p>
+                at equations?*</p>
 
                 <p>We'll build up to special relativity gradually, starting with a few "common sense" notions.</p>
+
+                <sup>*There will still be equations, but you won't have to read them if you don't want to.</sup>
 
                 <h2>Space and Time</h2>
 
@@ -50,7 +52,7 @@ class App extends React.Component {
                 for space.  On it, we chart the paths of various objects through <b>space</b> over <b>time</b>.  Here's
                 an example:</p>
 
-                <SpacetimeDiagram allowPausing={false} showFrameSelector={false} showTimeDots={false} showControls={false} showLightRays={false} spaceUnits="meters" c={3e8} observers={[
+                <SpacetimeDiagram allowPausing={false} showFrameSelector={false} showTimeDots={false} showControls={false} showLightRays={false} spaceUnits="meters" gamma={() => 1} c={Infinity} observers={[
                     {
                         name: "Observer A",
                         proper_time: 0,
@@ -77,7 +79,7 @@ class App extends React.Component {
                 second is a second, no matter what velocity you're going.  To visualize this, look at the dots as they
                 move across the lines.  One dot represents the passing of one second for each object:</p>
 
-                <SpacetimeDiagram paused={false} showFrameSelector={false} showControls={false} showLightRays={false} spaceUnits="meters" c={3e8} observers={[
+                <SpacetimeDiagram paused={false} showFrameSelector={false} showControls={false} showLightRays={false} spaceUnits="meters" gamma={() => 1} c={Infinity} observers={[
                     {
                         name: "Observer A",
                         proper_time: 0,
@@ -121,21 +123,25 @@ class App extends React.Component {
                 </p>
 
                 <p>This sounds like a very simple principle, but it poses a couple of challenges for anyone tasked with
-                transcribing the physical laws of the universe.  For one, how do we write the laws of physics so that
-                they don't change if we transform our reference frame into a new one?  And for another, <i>how do we model
-                the change in reference frame</i> - that is, what actually happens when we change velocity?  In case the
-                italics didn't give it away, we'll be concerned with the second question here.</p>
+                transcribing the physical laws of the universe, which must be solved in order.  Firstly, how do we model
+                the change in reference frame?  And secondly, how do we write the laws of physics so that
+                they don't change if we transform our reference frame according to that model?  The first question has a
+                simple, intuitive answer: to translate a velocity from one reference frame to the next, simply subtract
+                the velocity of the new frame.</p>
 
-                <p>For a very long time, we thought we had a model that accurately described what happens when we change
-                velocity - basically just a formalization of the intuitive idea that velocities <i>add together</i> when we
-                change reference frames.  In concrete terms, Alice is riding a train moving at 9 meters per second
-                relative to Bob.  Alice throws an apple at 12 meters per second, relative to her, in the direction of the
-                train.  Bob therefore sees the apple moving at 21 meters per second.
+                <p>
+                    In concrete terms, take a person, Alice, who is riding a train.  Ahead of her, through the window,
+                    she sees Bob by the tracks.  He is standing still on the ground, but relative to Alice, he is moving
+                    towards her at -9 meters per second. Alice throws an apple at 12 meters per second, relative to her,
+                    towards Bob's head.  Assuming that all motion is happening in the same direction, to translate the
+                    apple's velocity into Bob's reference frame, we subtract his velocity from the apple's.
+                    Bob is therefore struck by the apple at 21 meters per second.
+                </p>
 
-                Here's the same scenario in spacetime diagram form.  Try switching between perspectives to understand
+                <p>Here's the same scenario in spacetime diagram form.  Try switching between perspectives to understand
                 this relationship and how it appears on the diagram:</p>
 
-                <SpacetimeDiagram paused={false} showControls={true} showLightRays={false} spaceUnits={"meters"} axisTicksX={80} c={3e8} observers={[
+                <SpacetimeDiagram showControls={false} showTimeOnAxis={true} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} gamma={()=>1} c={Infinity} observers={[
                     {
                         name: "Alice",
                         proper_time: 0,
@@ -152,6 +158,95 @@ class App extends React.Component {
                         relative_velocity: 12
                     }
                 ]}/>
+
+                <p>This method of switching between inertial reference frames is called a
+                <b>Galilean transformation</b>, and they form part of the foundation of Newtonian mechanics.  However,
+                by Einstein's time there were some alarming discoveries in physics that seemed to defy this very basic
+                principle: the laws of physics appeared to actually <i>change</i> based on inertial reference frame.
+                It appeared that for all the progress we had made in physics, something was wrong on the very
+                fundamental level.  It turned out that this problem had its roots all the way down at the structure of
+                space and time.
+                </p>
+
+                <h3>Galilean Transformations: A Mathematical Treatment</h3>
+
+                <p>
+                Here I will take a brief mathematical detour to describe these transformations more precisely; feel free
+                to skip to the next section if you're not comfortable with some simple derivatives.
+                </p>
+
+                <p>
+                    Take a reference frame, <i>S</i>, and some arbitrary coordinates in that frame <i>(x,y,z,t)</i>.
+                    Say we want to translate these coordinates to a new frame, S', which is identical to S except that
+                    it is moving relative to <i>S</i> with velocity <i>v</i> in the positive <i>x</i> direction.  We can
+                    do that transformation as follows:
+                </p>
+
+                <p>
+                x' = x-vt<br/>
+                y' = y<br/>
+                z' = z<br/>
+                t' = t<br/>
+                </p>
+
+                <p>
+                As an example, take a body which starts at position <i>p<sub>0</sub> = (x<sub>0</sub>, y<sub>0</sub>,
+                z<sub>0</sub>)</i> at t=0.  It's moving at a constant velocity of <i>v<sub>body</sub></i> in the x
+                direction in frame S.  Since both our frames and our body are only moving in the x direction, we will
+                deal only with x and t.
+                </p>
+                <p>
+                    We will call the body's <i>x</i> position over time x<sub>body</sub>.  The
+                    constant velocity implies that x<sub>body</sub> varies linearly with t with slope v<sub>body</sub>.
+                    Since x<sub>body</sub> = x<sub>0</sub> at t=0, we see that <i>x<sub>body</sub> = v<sub>body</sub>t+x<sub>0</sub></i>
+                </p>
+                <p>
+                Say we now want to find the velocity <i>v'<sub>body</sub></i> of the body in our secondary reference frame, <i>S'</i>. As in
+                <i>S</i>, we can write our position over time in frame <i>S'</i> as <i>x'<sub>body</sub></i>.
+                    From our first transformation rule, we see that <i>x'<sub>body</sub>=x<sub>body</sub>-vt</i>.
+                By substitution this leads to <i>x'<sub>body</sub>=v<sub>body</sub>t+x<sub>0</sub>-vt</i>.
+                </p>
+
+                <p>
+                    We can rearrange this to arrive at <i>x'<sub>body</sub>=(v<sub>body</sub>-v)t+x<sub>0</sub></i>.
+                    We can use our fourth transformation rule to convert our time coordinate: <i>x'<sub>body</sub>=(v<sub>body</sub>-v)t'+x<sub>0</sub></i>
+                    We see that this is a linear function of t' with constant slope.  The velocity in frame S' is the
+                    change in x' over the change in t', so this constant slope implies a constant velocity
+                    <i>v'<sub>body</sub> = v<sub>body</sub>-v</i>
+                </p>
+
+                <SpacetimeDiagram showTimeOnAxis={true} animateAxisTime={false} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} gamma={()=>1} c={Infinity} observers={[
+                    {
+                        name: "Frame S",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    },
+                    {
+                        name: "Frame S'",
+                        proper_time: 0,
+                        relative_velocity: -9
+                    },
+                    {
+                        name: "body",
+                        proper_time: 0,
+                        relative_velocity: 12
+                    }
+                ]}/>
+
+                This may seem like a long walk for a short drink of water, but that's only because in this case, the
+                result happens to correspond to our intuition.  We will use similar logic later to uncover some of the
+                bizarre properties of actual spacetime.
+
+                Note that this math doesn't really correspond to a physical law; we aren't observing how objects
+                <i>behave</i>.  We're describing how they <i>appear</i> to change based on our <i>perspective</i>.  It
+                therefore more closely corresponds to the structure of space itself rather than the laws that govern
+                its contents.
+
+                <h3>Alternative Transformations</h3>
+
+                When we look at the equations representing Galilean Transformations, we might be tempted to ask why
+                that <i>particular</i> transformation makes so much intuitive sense to us, and what we might find if we
+                adopted a different framework.
 
                 <h2>A Rip in the Fabric</h2>
 
@@ -172,24 +267,6 @@ class App extends React.Component {
                         relative_velocity: -1
                     }
                 ]}/>
-
-                <h2>How It Works</h2>
-                <p>
-                    What you are looking at is a moving "Spacetime Diagram".  It shows the velocity of objects through
-                    spacetime.
-                </p>
-                <p>
-                    You mi
-                </p>
-                <p>
-                    You can also adjust the relative speeds of various observers to demonstrate various relativistic
-                    effects.  Each line shows the path an object would take through space-time at the given velocity.
-                    The dots on each line split them into regular intervals.  They may not look regular to you - close
-                    to the speed of light, the dots appear to spread out significantly.  This is due to the odd geometry
-                    of spacetime - in reality, the dots are all separated by the same "spacetime interval", which each
-                    observer will experience as a single second along their time axis.  The dots therefore demonstrate
-                    the effects of time dilation.
-                </p>
             </div>
         );
     }

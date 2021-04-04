@@ -11,11 +11,14 @@ class SpacetimeDiagram extends React.Component {
         lightColor: "yellow",
         observers: [],
         showTimeDots: true,
+        gamma: ((velocity,c) => 1/Math.sqrt(1-(velocity/c)**2)),
         c: 1,
         spaceUnits: "light-seconds",
         timeUnits: "seconds",
         axisTicksX: 20,
         axisTicksY: 10,
+        showTimeOnAxis: true,
+        animateAxisTime: false,
         showControls: true,
         showFrameSelector: true
     }
@@ -71,7 +74,7 @@ class SpacetimeDiagram extends React.Component {
                     <VerticalGridLines />
                     <HorizontalGridLines />
                     <XAxis title={"Space (" + this.props.spaceUnits + ")"}/>
-                    <YAxis title={"Time (" + this.props.timeUnits + ")"} tickTotal={0} position="middle"/>
+                    <YAxis title={"Time (" + this.props.timeUnits + ")"} tickTotal={this.props.showTimeOnAxis ? 10 : 0} position="middle"/>
                     {
                         this.state.observers.map((observer, idx) => (
                             this.props.showTimeDots ?
@@ -92,15 +95,11 @@ class SpacetimeDiagram extends React.Component {
         );
     }
 
-    gamma(velocity) {
-        return 1/Math.sqrt(1-(velocity/this.props.c)**2);
-    }
-
     set_perspective(idx) {
         const parsed_idx = parseInt(idx);
         const velocity = this.state.observers[parsed_idx].relative_velocity;
         const final_velocities = this.state.observers.map(observer => {
-            return (observer.relative_velocity - velocity) / (1 - observer.relative_velocity*velocity);
+            return (observer.relative_velocity - velocity) / (1 - observer.relative_velocity*velocity/(this.props.c**2));
         });
         this.setState({
             proper_time: this.state.observers[parsed_idx].proper_time,
@@ -122,8 +121,8 @@ class SpacetimeDiagram extends React.Component {
 
     get_spacetime_intervals(observer, interval=1, max=this.props.axisTicksY) {
         let data = [];
-        const frame_interval = this.gamma(observer.relative_velocity); // denotes the time interval in the current reference frame between ticks
-        const frame_offset = this.state.proper_time+(interval-(observer.proper_time%interval))*this.gamma(observer.relative_velocity); // denotes the time in the current reference frame until the NEXT tick
+        const frame_interval = this.props.gamma(observer.relative_velocity, this.props.c); // denotes the time interval in the current reference frame between ticks
+        const frame_offset = this.state.proper_time+(interval-(observer.proper_time%interval))*this.props.gamma(observer.relative_velocity, this.props.c); // denotes the time in the current reference frame until the NEXT tick
         data.push({x: 0, y: this.state.proper_time});
         let idx=0;
         let tick_time_in_current_frame = frame_offset + idx*frame_interval; // time in current frame of the idx-th tick from now
@@ -138,7 +137,7 @@ class SpacetimeDiagram extends React.Component {
 
     pass_time_in_frame(delta_t) {
         this.setState({
-            proper_time: this.state.paused ? this.state.proper_time : this.state.proper_time+delta_t,
+            proper_time: this.state.paused || !this.props.animateAxisTime ? this.state.proper_time : this.state.proper_time+delta_t,
             observers: this.state.observers.map((observer) => {
                 let new_vel = observer.relative_velocity;
                 let new_accel = observer.acceleration;
@@ -154,7 +153,7 @@ class SpacetimeDiagram extends React.Component {
                 }
 
                 return {
-                    proper_time: this.state.paused ? observer.proper_time : observer.proper_time + delta_t/this.gamma(observer.relative_velocity),
+                    proper_time: this.state.paused ? observer.proper_time : observer.proper_time + delta_t/this.props.gamma(observer.relative_velocity, this.props.c),
                     relative_velocity: new_vel,
                     acceleration: new_accel,
                     name: observer.name
