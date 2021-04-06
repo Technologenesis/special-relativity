@@ -202,8 +202,8 @@ class SpacetimeDiagram extends React.Component {
                 }
 
                 return {
-                    proper_time: this.state.paused ? observer.proper_time : observer.proper_time + delta_t/
-                        this.props.transform(new_vel, this.props.c)[1][1],
+                    proper_time: this.state.paused ? observer.proper_time : observer.proper_time + abs(delta_t/
+                        this.props.transform(new_vel, this.props.c)[1][1]),
                     relative_velocity: new_vel,
                     acceleration: new_accel,
                     name: observer.name

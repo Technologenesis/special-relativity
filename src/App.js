@@ -327,9 +327,10 @@ class App extends React.Component {
 
                 <p>
                 Despite the apparent difference in distance between dots, each body thus appears to experience their
-                movement in the exact same way, and those distances shift dramatically between reference frames.
-                To reflect this, we can develop a notion of <i>distance</i> in our spacetime, defined in such a way that
-                all dots, for all observers, are separated by the same distance.
+                movement in the exact same way.  The difference in distance thus does not appear to be <i>real</i>;
+                the perceived difference arises only from our <i>perspective</i>. To reflect this, we can develop a
+                notion of <i>distance</i> in our spacetime that is <b>invariant</b> to our perspective - i.e. it is
+                defined in such a way that all dots, for all observers, are separated by the same distance.
 
                 We will call this notion of distance the <b>spacetime interval</b>.  The spacetime interval between two
                 points in spacetime will be the amount of time a body travelling between them would experience
