@@ -1,7 +1,9 @@
 import './App.css';
 import SpacetimeDiagram from "./SpacetimeDiagram";
 import * as React from "react";
+import * as Latex from 'react-latex';
 import '../node_modules/react-vis/dist/style.css';
+import {pi, sin, cos} from 'mathjs';
 
 class App extends React.Component {
     render() {
@@ -79,7 +81,7 @@ class App extends React.Component {
                 second is a second, no matter what velocity you're going.  To visualize this, look at the dots as they
                 move across the lines.  One dot represents the passing of one second for each object:</p>
 
-                <SpacetimeDiagram paused={false} showFrameSelector={false} showControls={false} showLightRays={false} spaceUnits="meters" gamma={() => 1} c={Infinity} observers={[
+                <SpacetimeDiagram paused={false} showFrameSelector={false} showControls={false} showLightRays={false} spaceUnits="meters" c={Infinity} observers={[
                     {
                         name: "Observer A",
                         proper_time: 0,
@@ -141,7 +143,7 @@ class App extends React.Component {
                 <p>Here's the same scenario in spacetime diagram form.  Try switching between perspectives to understand
                 this relationship and how it appears on the diagram:</p>
 
-                <SpacetimeDiagram showControls={false} showTimeOnAxis={true} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} gamma={()=>1} c={Infinity} observers={[
+                <SpacetimeDiagram showControls={false} showTimeOnAxis={true} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} c={Infinity} observers={[
                     {
                         name: "Alice",
                         proper_time: 0,
@@ -172,7 +174,9 @@ class App extends React.Component {
 
                 <p>
                 Here I will take a brief mathematical detour to describe these transformations more precisely; feel free
-                to skip to the next section if you're not comfortable with some simple derivatives.
+                to skip to the next section if you're not comfortable with some simple math.  However, if you <i>are</i>
+                comfortable with simple math, I encourage you to read this section.  The symbols may be intimidating,
+                but the math itself is no more complicated than linear functions in pre-algebra.
                 </p>
 
                 <p>
@@ -188,6 +192,28 @@ class App extends React.Component {
                 z' = z<br/>
                 t' = t<br/>
                 </p>
+
+                <p>
+                    We can ignore the middle two equations for now since they leave <i>y</i> and <i>z</i> unchanged.
+                    Linear Algebra fans will recognize this as a <b>sheer transformation</b> representable by matrix
+                    multiplication:
+                </p>
+
+                <Latex displayMode={true}>{
+                    '$\\begin{bmatrix}' +
+                    'x\'\\\\' +
+                    't\'\\\\' +
+                    '\\end{bmatrix}' +
+                    ' = ' +
+                    '\\begin{bmatrix}' +
+                        '1 & -v \\\\' +
+                        '0 & 1' +
+                    '\\end{bmatrix}' +
+                    '\\begin{bmatrix}' +
+                        'x\\\\' +
+                        't\\\\' +
+                    '\\end{bmatrix}$'
+                }</Latex>
 
                 <p>
                 As an example, take a body which starts at position <i>p<sub>0</sub> = (x<sub>0</sub>, y<sub>0</sub>,
@@ -215,7 +241,7 @@ class App extends React.Component {
                     <i>v'<sub>body</sub> = v<sub>body</sub>-v</i>
                 </p>
 
-                <SpacetimeDiagram showTimeOnAxis={true} animateAxisTime={false} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} gamma={()=>1} c={Infinity} observers={[
+                <SpacetimeDiagram debug={true} showTimeOnAxis={true} animateAxisTime={false} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} c={Infinity} observers={[
                     {
                         name: "Frame S",
                         proper_time: 0,
@@ -233,20 +259,127 @@ class App extends React.Component {
                     }
                 ]}/>
 
+                <p>
                 This may seem like a long walk for a short drink of water, but that's only because in this case, the
                 result happens to correspond to our intuition.  We will use similar logic later to uncover some of the
                 bizarre properties of actual spacetime.
-
+                </p>
+                <p>
                 Note that this math doesn't really correspond to a physical law; we aren't observing how objects
                 <i>behave</i>.  We're describing how they <i>appear</i> to change based on our <i>perspective</i>.  It
                 therefore more closely corresponds to the structure of space itself rather than the laws that govern
                 its contents.
+                </p>
 
-                <h3>Alternative Transformations</h3>
-
+                <h3>Spacetime Intervals: an Early Introduction</h3>
+                <p>
                 When we look at the equations representing Galilean Transformations, we might be tempted to ask why
                 that <i>particular</i> transformation makes so much intuitive sense to us, and what we might find if we
                 adopted a different framework.
+                </p>
+                <p>
+                    There is one critical feature of the Galilean model that makes it a natural choice: it holds the
+                    flow of time constant for all bodies, regardless of their velocity through space.  It's worth noting
+                    that this by no means needs to be the case.
+                </p>
+                <p>
+                    Recall that our spacetime diagram portrays an object's motion through space over time - or,
+                    considered together, <b>spacetime</b>.  In our model, all objects flow through time at the same
+                    rate.  This is actually kind of an interesting property.  Our velocity through all spatial
+                    dimensions can be changed, but we have one, immutable velocity through time.
+                </p>
+
+                <SpacetimeDiagram showFrameSelector={false} showLightRays={false} maxSpeed={10} spaceUnits="meters" c={Infinity} observers={[
+                    {
+                        name: "Moving Body",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    }
+                ]}/>
+
+                <p>
+                Notice that no matter how you adjust the object's relative speed, the dots on its line - its flow of
+                time - are equally spread along our graph's time axis.  Further, they always move at the same rate
+                with respect to the time axis.  This makes intuitive sense - it preserves a universal flow of time.  But
+                if we think of our diagram in terms of the stuff in the middle - <b>spacetime</b> - and think of
+                the distance the dots are travelling through it, we notice a strange property.  For very fast bodies,
+                the "dots" appear to move very quickly along the line - that is, they appear to <i>speed up</i> through
+                spacetime.
+                </p>
+                <p>
+                And yet, when we switch into that object's frame of reference, its dots are spread out only by the
+                length of one second along the time axis, while it is the dots along our initial axis that are spread
+                out.
+                </p>
+
+                <SpacetimeDiagram paused={false} showControls={false} showLightRays={false} maxSpeed={10} spaceUnits="meters" c={Infinity} observers={[
+                    {
+                        name: "Initial Reference Frame",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    },
+                    {
+                        name: "Fast Body",
+                        proper_time: 0,
+                        relative_velocity: 10
+                    }
+                ]}/>
+
+                <p>
+                Despite the apparent difference in distance between dots, each body thus appears to experience their
+                movement in the exact same way, and those distances shift dramatically between reference frames.
+                To reflect this, we can develop a notion of <i>distance</i> in our spacetime, defined in such a way that
+                all dots, for all observers, are separated by the same distance.
+
+                We will call this notion of distance the <b>spacetime interval</b>.  The spacetime interval between two
+                points in spacetime will be the amount of time a body travelling between them would experience
+                during its journey.
+
+                Since the dots line up along the time axis no matter what, their distance can be given very simply:
+                where <i>&Delta;s</i> represents the distance between two points in <b>spacetime</b> and <i>&Delta;t</i>
+                represents their distance along the time axis, <i>&Delta;s = &Delta;t</i>.  How bizarre!  Distances in <i>spacetime</i> appear to be totally
+                independent of distance in <i>space</i>!
+                </p>
+                <p>
+                As a little thought experiment, let's think about what would happen if this <i>weren't</i> the case.
+                What if distance through <i>spacetime</i> worked the same way as distance through <i>space</i> - which,
+                as you may recall, is expressed by the <b>Pythagorean theorem</b>:
+                </p>
+
+                <Latex displayMode={true}>{'$\\Delta s = \\sqrt{\\Delta x^2+\\Delta y^2+\\Delta z^2}$'}</Latex>
+
+                <p>
+                    To describe distance through space<i>time</i>, we could easily slip time into this equation:
+                </p>
+
+                <Latex displayMode={true}>{'$\\Delta s = \\sqrt{\\Delta x^2+\\Delta y^2+\\Delta z^2+\\Delta t^2}$'}</Latex>
+
+                <p>
+                    Let's try plotting this on a spacetime diagram.  It will look a lot like our other ones, only the
+                    dots along each line will no longer be redundant: they will reflect <i>distance</i> through
+                    spacetime along the lines, which the moving body will experience as a second.
+                </p>
+
+                <SpacetimeDiagram maxSpeed={pi} spaceUnits={"meters"} axisTicksX={10} velocityUnits={"radians"} showLightRays={false} transform={(theta, _) => [
+                    [cos(theta), -sin(theta)],
+                    [sin(theta),  cos(theta)]
+                ]} translateVelocity={(v_frame, v_body, _) => v_body-v_frame} observers={[
+                    {
+                        name: "Observer A",
+                        relative_velocity: 0,
+                        proper_time: 0
+                    },
+                    {
+                        name: "Observer B",
+                        relative_velocity: pi/4,
+                        proper_time: 0
+                    },
+                    {
+                        name: "Observer C",
+                        relative_velocity: -pi/4,
+                        proper_time: 0
+                    }
+                ]}/>
 
                 <h2>A Rip in the Fabric</h2>
 

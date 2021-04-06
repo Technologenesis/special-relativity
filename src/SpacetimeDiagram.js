@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {HorizontalGridLines, LineMarkSeries, LineSeries, VerticalGridLines, XAxis, XYPlot, YAxis} from "react-vis";
+import {matrix, multiply, add, inv, abs, subset, index} from 'mathjs';
 
 class SpacetimeDiagram extends React.Component {
     static defaultProps = {
@@ -8,11 +9,26 @@ class SpacetimeDiagram extends React.Component {
         animation_step: .02,
         perspective_shift_animation_length: .2,
         showLightRays: true,
+        maxSpeed: .999,
+        debug: false,
         lightColor: "yellow",
         observers: [],
         showTimeDots: true,
-        gamma: ((velocity,c) => 1/Math.sqrt(1-(velocity/c)**2)),
+        transform: (velocity, c) => {
+            const gamma = 1/Math.sqrt(1-(velocity/c)**2);
+            return [
+                [gamma, -velocity*gamma],
+                [-velocity*gamma/c**2, gamma]
+            ];
+        },
         c: 1,
+        translateVelocity: (v_frame, v_body, transform) => {
+            const dx_body = v_body;
+            const dt_body = 1;
+            const dxprime_body = transform[0][0]*dx_body + transform[0][1]*dt_body;
+            const dtprime_body = transform[1][0]*dx_body + transform[1][1]*dt_body;
+            return dxprime_body/dtprime_body;
+        },
         spaceUnits: "light-seconds",
         timeUnits: "seconds",
         axisTicksX: 20,
@@ -57,7 +73,7 @@ class SpacetimeDiagram extends React.Component {
             <div>
                 {
                     this.state.observers.map((observer, idx) =>
-                        <label key={idx}>V<sub>{observer.name}</sub>: <input type="range" min={-this.props.maxSpeed || -this.props.c} max={this.props.maxSpeed || this.props.c} step=".01" value={this.state.observers[idx].relative_velocity} onChange={event => this.set_relative_velocity(idx, event.target.value)}/>{this.state.observers[idx].relative_velocity}<br/></label>
+                        <label key={idx}>V<sub>{observer.name}</sub>: <input type="range" min={-this.props.maxSpeed || -this.props.c} max={this.props.maxSpeed || this.props.c} step=".01" value={this.state.observers[idx].relative_velocity} onChange={event => this.set_relative_velocity(idx, event.target.value)}/>{this.state.observers[idx].relative_velocity + " " + (this.props.velocityUnits || (this.props.spaceUnits + "/" + this.props.timeUnits))}<br/></label>
                     )
                 }
             </div>
@@ -91,6 +107,7 @@ class SpacetimeDiagram extends React.Component {
                         ) : null
                     }
                 </XYPlot>
+                <p>{this.props.debug ? JSON.stringify(this.state.observers) : null}</p>
             </div>
         );
     }
@@ -99,7 +116,7 @@ class SpacetimeDiagram extends React.Component {
         const parsed_idx = parseInt(idx);
         const velocity = this.state.observers[parsed_idx].relative_velocity;
         const final_velocities = this.state.observers.map(observer => {
-            return (observer.relative_velocity - velocity) / (1 - observer.relative_velocity*velocity/(this.props.c**2));
+            return this.props.translateVelocity(velocity, observer.relative_velocity, this.props.transform(velocity, this.props.c));
         });
         this.setState({
             proper_time: this.state.observers[parsed_idx].proper_time,
@@ -120,18 +137,49 @@ class SpacetimeDiagram extends React.Component {
     }
 
     get_spacetime_intervals(observer, interval=1, max=this.props.axisTicksY) {
+        // sticking a lot of consts in here since it's the only way to break up the math a little
+
+        // we grab a matrix for transforming from our current frame into the observer frame
+        const transform_to_observer_frame = matrix(this.props.transform(observer.relative_velocity, this.props.c));
+        // and one for jumping back again
+        const transform_from_observer_frame = inv(transform_to_observer_frame);
+
+        // the interval is given in terms of seconds in the observer reference frame,
+        // which corresponds to a vector in the observer's frame along the time axis
+        const interval_in_observer_frame = matrix([0, interval]);
+        // so we convert this into an interval in our reference frame
+        const unoriented_interval_in_reference_frame = multiply(transform_from_observer_frame, interval_in_observer_frame);
+        // we must also ensure that the time component of our interval is positive
+        const time_directionality_aligned = subset(unoriented_interval_in_reference_frame, index(1)) >= 0;
+        const interval_in_reference_frame = multiply(time_directionality_aligned ? 1 : -1, unoriented_interval_in_reference_frame);
+
+        // we also need a starting point in our current frame.
+        // This is a little complicated, since if the object is going forwards in time, this is its LAST
+        // tick, while if it's going backwards in time, this will be its NEXT tick.
+        const offset_of_last_interval_tick_in_observer_frame = matrix([0, -(observer.proper_time % interval) + (time_directionality_aligned ? 0 : interval)]);
+        // now we convert that point into our current reference frame to get a spacetime offset for the first point we'll draw
+        const offset_of_last_interval_tick_in_reference_frame = multiply(transform_from_observer_frame, offset_of_last_interval_tick_in_observer_frame);
+
+        // we only want to draw within the bounds of the graph (plus some extra to ensure we fill the whole thing),
+        // so we denote these bounds here:
+        const diagram_bounds = [
+            [-this.props.axisTicksX / 2 - abs(subset(interval_in_reference_frame, index(0))), -subset(interval_in_reference_frame, index(1))], // minimum
+            [this.props.axisTicksX / 2 + abs(subset(interval_in_reference_frame, index(0))), this.props.axisTicksY + subset(interval_in_reference_frame, index(1))] // maximum
+        ];
+
+        // create a handy way to check if we should keep drawing the line
+        const is_in_bounds = (point) => {
+            return !(subset(point, index(0)) < diagram_bounds[0][0] ||
+                subset(point, index(1)) < diagram_bounds[0][1] ||
+                subset(point, index(0)) > diagram_bounds[1][0] ||
+                subset(point, index(1)) > diagram_bounds[1][1]);
+        };
+
+        // long walk for a short drink of water:
         let data = [];
-        const frame_interval = this.props.gamma(observer.relative_velocity, this.props.c); // denotes the time interval in the current reference frame between ticks
-        const frame_offset = this.state.proper_time+(interval-(observer.proper_time%interval))*this.props.gamma(observer.relative_velocity, this.props.c); // denotes the time in the current reference frame until the NEXT tick
-        data.push({x: 0, y: this.state.proper_time});
-        let idx=0;
-        let tick_time_in_current_frame = frame_offset + idx*frame_interval; // time in current frame of the idx-th tick from now
-        while(tick_time_in_current_frame <= this.state.proper_time + max) { // until we hit the top of the graph,
-            data.push({x: observer.relative_velocity*(tick_time_in_current_frame-this.state.proper_time), y: tick_time_in_current_frame}); // push the next tick onto the worldline
-            idx += 1;
-            tick_time_in_current_frame = frame_offset + idx*frame_interval; // next tick
+        for(let offset = offset_of_last_interval_tick_in_reference_frame; is_in_bounds(offset); offset = add(offset, interval_in_reference_frame)) {
+            data.push({x: subset(offset, index(0)), y: subset(offset, index(1))+this.state.proper_time});
         }
-        data.push({x: observer.relative_velocity*(tick_time_in_current_frame - this.state.proper_time), y: tick_time_in_current_frame}); // one more push to make sure the line fills the whole graph
         return data;
     }
 
@@ -153,7 +201,8 @@ class SpacetimeDiagram extends React.Component {
                 }
 
                 return {
-                    proper_time: this.state.paused ? observer.proper_time : observer.proper_time + delta_t/this.props.gamma(observer.relative_velocity, this.props.c),
+                    proper_time: this.state.paused ? observer.proper_time : observer.proper_time + delta_t/
+                        this.props.transform(new_vel, this.props.c)[1][1],
                     relative_velocity: new_vel,
                     acceleration: new_accel,
                     name: observer.name
