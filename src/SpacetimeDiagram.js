@@ -154,11 +154,11 @@ class SpacetimeDiagram extends React.Component {
         const interval_in_reference_frame = multiply(time_directionality_aligned ? 1 : -1, unoriented_interval_in_reference_frame);
 
         // we also need a starting point in our current frame.
-        // This is a little complicated, since if the object is going forwards in time, this is its LAST
-        // tick, while if it's going backwards in time, this will be its NEXT tick.
-        const offset_of_last_interval_tick_in_observer_frame = matrix([0, -(observer.proper_time % interval) + (time_directionality_aligned ? 0 : interval)]);
+        // This is a little complicated, since if the object is going forwards in time, this is its NEXT
+        // tick, while if it's going backwards in time, this will be its LAST tick.
+        const offset_of_next_interval_tick_in_observer_frame = matrix([0, -(observer.proper_time % interval) + (time_directionality_aligned ? interval : 0)]);
         // now we convert that point into our current reference frame to get a spacetime offset for the first point we'll draw
-        const offset_of_last_interval_tick_in_reference_frame = multiply(transform_from_observer_frame, offset_of_last_interval_tick_in_observer_frame);
+        const offset_of_next_interval_tick_in_reference_frame = multiply(transform_from_observer_frame, offset_of_next_interval_tick_in_observer_frame);
 
         // we only want to draw within the bounds of the graph (plus some extra to ensure we fill the whole thing),
         // so we denote these bounds here:
@@ -177,7 +177,8 @@ class SpacetimeDiagram extends React.Component {
 
         // long walk for a short drink of water:
         let data = [];
-        for(let offset = offset_of_last_interval_tick_in_reference_frame; is_in_bounds(offset); offset = add(offset, interval_in_reference_frame)) {
+        data.push({x:0, y:this.state.proper_time});
+        for(let offset = offset_of_next_interval_tick_in_reference_frame; is_in_bounds(offset); offset = add(offset, interval_in_reference_frame)) {
             data.push({x: subset(offset, index(0)), y: subset(offset, index(1))+this.state.proper_time});
         }
         return data;
