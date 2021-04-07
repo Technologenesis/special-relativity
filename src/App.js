@@ -241,7 +241,7 @@ class App extends React.Component {
                     <i>v'<sub>body</sub> = v<sub>body</sub>-v</i>
                 </p>
 
-                <SpacetimeDiagram debug={true} showTimeOnAxis={true} animateAxisTime={false} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} c={Infinity} observers={[
+                <SpacetimeDiagram showTimeOnAxis={true} animateAxisTime={false} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} c={Infinity} observers={[
                     {
                         name: "Frame S",
                         proper_time: 0,
