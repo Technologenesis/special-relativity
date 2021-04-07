@@ -73,7 +73,7 @@ class SpacetimeDiagram extends React.Component {
             <div>
                 {
                     this.state.observers.map((observer, idx) =>
-                        <label key={idx}>V<sub>{observer.name}</sub>: <input type="range" min={-this.props.maxSpeed || -this.props.c} max={this.props.maxSpeed || this.props.c} step=".01" value={this.state.observers[idx].relative_velocity} onChange={event => this.set_relative_velocity(idx, event.target.value)}/>{this.state.observers[idx].relative_velocity + " " + (this.props.velocityUnits || (this.props.spaceUnits + "/" + this.props.timeUnits))}<br/></label>
+                        <label key={idx}>V<sub>{observer.name}</sub>: <input type="range" min={-this.props.maxSpeed || -this.props.c} max={this.props.maxSpeed || this.props.c} step={this.props.step || .001} value={this.state.observers[idx].relative_velocity} onChange={event => this.set_relative_velocity(idx, event.target.value)}/>{this.state.observers[idx].relative_velocity + " " + (this.props.velocityUnits || (this.props.spaceUnits + "/" + this.props.timeUnits))}<br/></label>
                     )
                 }
             </div>

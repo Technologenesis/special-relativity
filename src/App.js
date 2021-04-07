@@ -3,7 +3,7 @@ import SpacetimeDiagram from "./SpacetimeDiagram";
 import * as React from "react";
 import * as Latex from 'react-latex';
 import '../node_modules/react-vis/dist/style.css';
-import {pi, sin, cos} from 'mathjs';
+import {pi, sin, cos, atan} from 'mathjs';
 
 class App extends React.Component {
     render() {
@@ -353,18 +353,24 @@ class App extends React.Component {
                     To describe distance through space<i>time</i>, we could easily slip time into this equation:
                 </p>
 
-                <Latex displayMode={true}>{'$\\Delta s = \\sqrt{\\Delta x^2+\\Delta y^2+\\Delta z^2+\\Delta t^2}$'}</Latex>
-
+                <Latex displayMode={true}>{'$\\Delta s = \\sqrt{\\Delta x^2+\\Delta y^2+\\Delta z^2+c^2\\Delta t^2}$'}</Latex>
+                <Latex>
+                    Where $$c$$ is an arbitrary constant for converting between units of tima and units of space.  The
+                    fact that it shares a name with the speed of light is no accident, but we will get there later.
+                </Latex>
                 <p>
                     Let's try plotting this on a spacetime diagram.  It will look a lot like our other ones, only the
                     dots along each line will no longer be redundant: they will reflect <i>distance</i> through
                     spacetime along the lines, which the moving body will experience as a second.
                 </p>
 
-                <SpacetimeDiagram maxSpeed={pi} spaceUnits={"meters"} axisTicksX={10} velocityUnits={"radians"} showLightRays={false} transform={(theta, _) => [
-                    [cos(theta), -sin(theta)],
-                    [sin(theta),  cos(theta)]
-                ]} translateVelocity={(v_frame, v_body, _) => v_body-v_frame} observers={[
+                <SpacetimeDiagram id="pythagorean_spacetime" c={3e8} maxSpeed={5} spaceUnits={"meters"} axisTicksX={10} showLightRays={false} transform={(velocity, c) => {
+                    let theta = velocity*atan(1/c);
+                    return [
+                        [cos(theta)/c, -sin(theta)],
+                        [sin(theta),  cos(theta)]
+                    ]
+                }} translateVelocity={(v_frame, v_body, _) => v_body-v_frame} observers={[
                     {
                         name: "Observer A",
                         relative_velocity: 0,
@@ -372,15 +378,114 @@ class App extends React.Component {
                     },
                     {
                         name: "Observer B",
-                        relative_velocity: pi/4,
+                        relative_velocity: 2,
                         proper_time: 0
                     },
                     {
                         name: "Observer C",
-                        relative_velocity: -pi/4,
+                        relative_velocity: -2,
                         proper_time: 0
                     }
                 ]}/>
+
+                <p>
+                    Voila!  We have now decoupled ourselves from Galilean transformations, and are free to explore
+                    any spacetime we please!  Like this one!  This exotic spacetime geometry works by... well...
+                    actually, it doesn't seem to work all that differently, does it?  Why are our dots still so evenly
+                    spaced out along the time axis?  Shouldn't it be the length along the <i>line</i> which is
+                    constant?  Take a minute and try to think about why this might be.  If you need a place to start,
+                    try to work out the distances between some pairs of dots using our distance equation.
+                </p>
+                <p>
+                    Have you tried it yet?  If you tried working out the distance between two points,
+                    you may have noticed that you're missing a very important part of the equation: <i>c</i>, the
+                    conversion factor between meters and seconds!  I left this parameter at its real-world value, which
+                    is ~3x10<sup>8</sup> meters per second.  As a result, <i>c<sup>2</sup>&Delta;t<sup>2</sup></i>
+                    absolutely dominates the distance equation; <i>&Delta;x<sup>2</sup></i> is negligible in comparison.
+                    This incongruence gives rise to what appears to be a Galilean relationship between velocities.
+                    However, we can use <i>light-seconds</i> for the units on our x axis.  A light-second is the
+                    distance light travels in a single second.  Since we are using the speed of light as our conversion
+                    factor <i>c</i>, by definition, measuring our distance in light-seconds gives us a conversion factor
+                    <i>c</i> of 1 light-second per second:
+                </p>
+
+                <SpacetimeDiagram allowPausing={false} id="pythagorean_spacetime" maxSpeed={3.14} step={.001} axisTicksX={10} showLightRays={false} transform={(theta, c) => {
+                    return [
+                        [cos(theta)/c, -sin(theta)],
+                        [sin(theta),  cos(theta)]
+                    ]
+                }} translateVelocity={(v_frame, v_body, _) => v_body-v_frame} observers={[
+                    {
+                        name: "Observer A",
+                        relative_velocity: 0,
+                        proper_time: 0
+                    },
+                    {
+                        name: "Observer B",
+                        relative_velocity: .3,
+                        proper_time: 0
+                    },
+                    {
+                        name: "Observer C",
+                        relative_velocity: -.3,
+                        proper_time: 0
+                    }
+                ]}/>
+
+                <p>Now <i>there's</i> something interesting!  Fiddle around with the velocities a bit.  You'll find
+                that increasing the velocity of an object <i>rotates</i> its time axis rather than <i>sheering</i> it.
+                Velocity here represents not the straight-line distance between the objects at each time, but arc-length
+                between the objects over time as measured in the reference frame - i.e. the distance <i>along</i> the
+                circle around which they are rotating.</p>
+
+                <SpacetimeDiagram id="pythagorean_spacetime" maxSpeed={3.14} step={.001} axisTicksX={10} showLightRays={false} transform={(theta, c) => {
+                    return [
+                        [cos(theta)/c, -sin(theta)],
+                        [sin(theta),  cos(theta)]
+                    ]
+                }} translateVelocity={(v_frame, v_body, _) => v_body-v_frame} observers={[
+                    {
+                        name: "Observer A",
+                        relative_velocity: 0,
+                        proper_time: 0
+                    },
+                    {
+                        name: "Observer B",
+                        relative_velocity: .3,
+                        proper_time: 0
+                    },
+                    {
+                        name: "Observer C",
+                        relative_velocity: -.3,
+                        proper_time: 0
+                    }
+                ]}/>
+
+                <p>This is also representable as a system of equations (which, as promised, you are free to skip - just
+                calling it a "rotation" is enough):</p>
+
+                <Latex displayMode={true}>
+                    {"$\\begin{matrix}" +
+                        "x' = \\frac{cos(\\theta)x}{c} - sin(\\theta)t\\\\" +
+                        "t' = sin(\\theta)x + cos(\\theta)t" +
+                    "\\end{matrix}" +
+                    "\\:or\\:" +
+                    "\\begin{bmatrix}" +
+                        "\\frac{cos(\\theta)}{c} & -sin(\\theta)\\\\" +
+                        "sin(\\theta) & cos(\\theta)" +
+                    "\\end{bmatrix}$"}
+                </Latex>
+
+                <p>
+                    Already we are uncovering some effects that have analogues in the theory of relativity.  For
+                    instance, because the dots are no longer evenly spaced along our reference frame's time axis,
+                    it appears to pass at different rates for different objects.
+                </p>
+
+                <p>Notice that if you crank the velocity, the line disappears below the x axis and pops up
+                on the other side!  This is the <i>other side</i> of the line: by doing this, we have reversed
+                the object's orientation along our time axis.  In other words, the object is travelling backwards
+                in time!</p>
 
                 <h2>A Rip in the Fabric</h2>
 
