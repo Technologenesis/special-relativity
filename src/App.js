@@ -355,7 +355,7 @@ class App extends React.Component {
 
                 <Latex displayMode={true}>{'$\\Delta s = \\sqrt{\\Delta x^2+\\Delta y^2+\\Delta z^2+c^2\\Delta t^2}$'}</Latex>
                 <Latex>
-                    Where $$c$$ is an arbitrary constant for converting between units of tima and units of space.  The
+                    Where $$c$$ is an arbitrary constant for converting between units of time and units of space.  The
                     fact that it shares a name with the speed of light is no accident, but we will get there later.
                 </Latex>
                 <p>
@@ -486,6 +486,8 @@ class App extends React.Component {
                 on the other side!  This is the <i>other side</i> of the line: by doing this, we have reversed
                 the object's orientation along our time axis.  In other words, the object is travelling backwards
                 in time!</p>
+
+                <p>This is a neat little property</p>
 
                 <h2>A Rip in the Fabric</h2>
 
