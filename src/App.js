@@ -48,7 +48,7 @@ class App extends React.Component {
                 <p>
                     One of the most fundamental properties our universe has is that it is a highly symmetrical object.
                     This symmetry lies at the heart of the theory of relativity, as well as many of the developments
-                    in physics that have been made sense its inception.  With the benefit of hindsight, then, it seems
+                    in physics that have been made since its inception.  With the benefit of hindsight, then, it seems
                     that our approach to relativity should emphasize this fundamental symmetry, and that we should
                     motivate our investigation in those terms.
                 </p>
