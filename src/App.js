@@ -9,8 +9,6 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <h1>Special Relativity Visualizer</h1>
-
                 <SpacetimeDiagram observers={[
                     {
                         name: "Observer A",
@@ -466,12 +464,12 @@ class App extends React.Component {
 
                 <Latex displayMode={true}>
                     {"$\\begin{matrix}" +
-                        "x' = \\frac{cos(\\theta)x}{c} - sin(\\theta)t\\\\" +
+                        "x' = cos(\\theta)x/c - sin(\\theta)t\\\\" +
                         "t' = sin(\\theta)x + cos(\\theta)t" +
                     "\\end{matrix}" +
                     "\\:or\\:" +
                     "\\begin{bmatrix}" +
-                        "\\frac{cos(\\theta)}{c} & -sin(\\theta)\\\\" +
+                        "cos(\\theta)/c & -sin(\\theta)\\\\" +
                         "sin(\\theta) & cos(\\theta)" +
                     "\\end{bmatrix}$"}
                 </Latex>
@@ -479,17 +477,56 @@ class App extends React.Component {
                 <p>
                     Already we are uncovering some effects that have analogues in the theory of relativity.  For
                     instance, because the dots are no longer evenly spaced along our reference frame's time axis,
-                    it appears to pass at different rates for different objects.
+                    it appears to pass at different rates for different objects.  In our case, the dots appear closer
+                    together and thus <i>contracted</i>; their real-life counterparts appear <i>dilated</i> for very
+                    similar reasons.
                 </p>
 
                 <p>Notice that if you crank the velocity, the line disappears below the x axis and pops up
-                on the other side!  This is the <i>other side</i> of the line: by doing this, we have reversed
-                the object's orientation along our time axis.  In other words, the object is travelling backwards
-                in time!</p>
+                on the other side!  This is the <i>flip-side</i> of the line; it represents the object's past. By doing
+                this, we have reversed the object's orientation along our time axis.  In other words, the object is
+                travelling backwards in time!</p>
 
-                <p>This is a neat little property</p>
+                <p>
+                    This is a neat little property, but don't get too excited.  We've called an axis on our graph
+                    "time", but what's <b>time-like</b> about it, really?  It doesn't flow in a uniform direction.
+                    It's not related to the spatial dimensions in a special way: in fact, it's explicitly defined
+                    so that it fits in exactly with the other spatial dimensions.  An object in this universe could
+                    double back on itself and intersect with its own past - clearly a nonsensical property.  But this
+                    is nonetheless a good thought experiment with which to introduce <b>spacetime</b> and <b>spacetime
+                    intervals</b>.  We will see shortly that our own spacetime has its own exotic properties which,
+                    luckily for us, nonetheless preserve the causal structure of time.
+                </p>
 
                 <h2>A Rip in the Fabric</h2>
+
+                <p>
+                    Spoiler - neither the Galilean model nor our custom "Pythagorean" model correspond to real
+                    spacetime.  But scientists in the 19th century didn't know that, and they also didn't have animated
+                    diagrams of alternate spacetime structures.  So they can be forgiven for not having that on their
+                    radar when they started seeing some quite anomalous things.
+                </p>
+                <p>
+                    Several experiments had begun to show that certain things appeared to change about the world based
+                    on a person's velocity.  The most well-known of these was that light appeared to have a constant
+                    speed - this speed did <i>not</i> appear to vary with the speed of the emitting body.  It was
+                    proposed by some that this could be the result of some invisible, all-permeating substance called
+                    the <b>luminiferous aether</b> - but if this were the case, we would at least expect to measure some
+                    variation in our measurement of the speed of light, based on the relative velocity of the measurement
+                    apparatus to the aether itself.  No such variation could be recorded.  The speed of light did not
+                    obey the Galilean transformations.
+                </p>
+                <p>
+                    This was a very bad sign; Galileo's principle of relativity holds that the laws of physics should be
+                    <i>invariant</i> under changes in inertial frame.  This appeared not to be the case.  No satisfactory
+                    explanation could be given until Einstein published his paper on special relativity, which was not
+                    based on any experiments.  It started only with two assumptions, and deduced the entire theory
+                    from these: that the laws of physics are invariant under changes in inertial reference frame,
+                    <i>and</i> the speed of light in a vacuum is constant for all observers.
+                </p>
+                <p>
+                    
+                </p>
 
                 <SpacetimeDiagram paused={false} showLightRays={false} maxSpeed={10} spaceUnits="meters" c={3e8} observers={[
                     {
