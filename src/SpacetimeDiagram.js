@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {HorizontalGridLines, LineMarkSeries, LineSeries, VerticalGridLines, XAxis, XYPlot, YAxis} from "react-vis";
+import {HorizontalGridLines, LineMarkSeries, LineSeries, VerticalGridLines, XAxis, XYPlot, YAxis, Borders} from "react-vis";
 import {matrix, multiply, add, inv, abs, subset, index} from 'mathjs';
 
 class SpacetimeDiagram extends React.Component {
@@ -41,7 +41,10 @@ class SpacetimeDiagram extends React.Component {
 
     constructor(props) {
         super(props);
+        this.div = React.createRef();
         this.state = {
+            height: 0,
+            width: 0,
             proper_time: 0,
             paused: props.paused,
             observers: props.observers
@@ -82,15 +85,13 @@ class SpacetimeDiagram extends React.Component {
             <button onClick={this.togglePaused}>{this.state.paused ? "Play" : "Pause"}</button>
         ) : null;
         return (
-            <div style={{margin: "0 auto", width: 500, backgroundColor: "#f0ffff", boxShadow: "0px 0px 5px #446688", borderRadius: 10, padding: 10}}>
+            <div style={{margin: "0 auto", backgroundColor: "#f0ffff", boxShadow: "0px 0px 5px #446688", borderRadius: 10, padding: 10, width: 500}}>
                 {frameSelector}<br/>
                 {controls}<br/>
                 {pauseButton}<br/>
                 <XYPlot width={500} height={500} yDomain={[this.state.proper_time, this.state.proper_time+this.props.axisTicksY]} xDomain={[-this.props.axisTicksX/2, this.props.axisTicksX/2]}>
                     <VerticalGridLines />
                     <HorizontalGridLines />
-                    <XAxis title={"Space (" + this.props.spaceUnits + ")"}/>
-                    <YAxis title={"Time (" + this.props.timeUnits + ")"} tickTotal={this.props.showTimeOnAxis ? 10 : 0} position="middle"/>
                     {
                         this.state.observers.map((observer, idx) => (
                             this.props.showTimeDots ?
@@ -106,6 +107,14 @@ class SpacetimeDiagram extends React.Component {
                                 {x: this.props.axisTicksX/2, y: this.state.proper_time + this.props.axisTicksX/(2*this.props.c)}]}/>
                         ) : null
                     }
+                    <Borders style={{
+                        bottom: {fill: '#f0ffff'},
+                        left: {fill: '#f0ffff'},
+                        right: {fill: '#f0ffff'},
+                        top: {fill: '#f0ffff'}
+                    }}/>
+                    <XAxis title={"Space (" + this.props.spaceUnits + ")"}/>
+                    <YAxis title={"Time (" + this.props.timeUnits + ")"} tickTotal={this.props.showTimeOnAxis ? 10 : 0} position="middle"/>
                 </XYPlot>
                 <p>{this.props.debug ? JSON.stringify(this.state.observers) : null}</p>
             </div>

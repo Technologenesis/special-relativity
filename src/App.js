@@ -3,7 +3,7 @@ import SpacetimeDiagram from "./SpacetimeDiagram";
 import * as React from "react";
 import * as Latex from 'react-latex';
 import '../node_modules/react-vis/dist/style.css';
-import {pi, sin, cos, atan} from 'mathjs';
+import {sin, cos, atan} from 'mathjs';
 
 class App extends React.Component {
     render() {
