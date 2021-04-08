@@ -82,7 +82,7 @@ class SpacetimeDiagram extends React.Component {
             <button onClick={this.togglePaused}>{this.state.paused ? "Play" : "Pause"}</button>
         ) : null;
         return (
-            <div style={{margin: "0 auto", width: 500, backgroundColor: "#f0ffff", borderRadius: 10, padding: 10}}>
+            <div style={{margin: "0 auto", width: 500, backgroundColor: "#f0ffff", boxShadow: "0px 0px 5px #446688", borderRadius: 10, padding: 10}}>
                 {frameSelector}<br/>
                 {controls}<br/>
                 {pauseButton}<br/>
