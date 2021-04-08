@@ -43,6 +43,75 @@ class App extends React.Component {
 
                 <sup>*There will still be equations, but you won't have to read them if you don't want to.</sup>
 
+                <h2>Prologue: Symmetry</h2>
+
+                <p>
+                    One of the most fundamental properties our universe has is that it is a highly symmetrical object.
+                    This symmetry lies at the heart of the theory of relativity, as well as many of the developments
+                    in physics that have been made sense its inception.  With the benefit of hindsight, then, it seems
+                    that our approach to relativity should emphasize this fundamental symmetry, and that we should
+                    motivate our investigation in those terms.
+                </p>
+                <p>
+                    You're probably most familiar with symmetry in the realm of shapes, so we'll start there.  Take the
+                    example of an equilateral triangle.  We imagine that we are standing at one of its points; for
+                    brevity, we will call the point we are standing on <i>A</i>.  The point clockwise to us is <i>B</i>,
+                    and the point counter-clockwise to us is <i>C</i>.
+                </p>
+                <p>
+                    Now, suppose that as you are contemplating the situation, I club you in the head, knocking you
+                    unconscious.  You wake up some time later and see that you are still on <i>some</i> point of the
+                    triangle. Ignoring the effects of any potential concussion, can you identify, just from looking at the
+                    triangle, which point you're standing on?
+                </p>
+                <p>
+                    Assuming an ideal equilateral triangle, the answer is clearly no.  All the points look identical
+                    from the perspective of a person standing on any one of them - they would all describe the triangle
+                    the exact same way.
+                </p>
+                <p>
+                    This reveals the property that we call <b>symmetry</b>: informally, we will say it is the property
+                    that an object is identical from multiple perspectives.
+                </p>
+                <p>
+                    Suppse now that I take you out to lunch as an apology.  During our meal, we notice a mysterious line
+                    drawn along the ground.  After sufficient assurance on my part that this isn't some kind of trick,
+                    we approach the line and investigate.
+                </p>
+                <p>
+                    The line appears to go on forever in all directions.  We conclude that this line also has a sort of
+                    symmetry: we can follow the line in a straight line in whichever direction the line points, as far
+                    as we want, and the line will appear the same.  So we set down our things and follow the line as far
+                    as we can, for miles and miles, until finally, we come upon the place where we started.  That we
+                    recognize this point means we must have been wrong about the symmetry this object possesses.  While
+                    it's true that every point along our journey has been identical, we know that we are seeing a
+                    <i>different kind</i> of symmetry.  It appears that what we thought was a line was actually just
+                    a very large circle, and that the symmetry we were observing wasn't the <i>translational</i>
+                    symmetry of a line, but the <i>rotational</i> symmetry of a circle.  But the limits of our
+                    perspective stopped us from seeing this fact.
+                </p>
+                <p>
+                    Our universe, too, appears to be symmetric in many ways.  Taking the laws of physics together as a
+                    "description" of the universe, there are many ways in which a person can shift their perspective
+                    while that description remains valid.  For instance, I can carry out some experiment in America,
+                    and expect to get the same results in Spain - assuming nothing about the experiment has changed
+                    except the location.  So the universe, like the line, appears to exhibit
+                    <i>translational</i> symmetry.  Similarly, I can carry out an experiment, then face some other
+                    direction and carry it out again, and still expect the same results.  So the universe appears to
+                    exhibit <i>rotational</i> symmetry. I can wait an hour and do the experiment <i>again</i> and still
+                    expect the same result - so the universe exhibits symmetry across <i>time</i>.  And finally - most
+                    relevantly for us - I can carry out an experiment at some constant speed, and then carry it out at
+                    <i>another</i> constant speed, and still get the same results.  The universe thus appears to exhibit
+                    symmetry across changes in velocity.  In all these cases, my description of the universe
+                    <i>itself</i> remains identical, although I might have different thoughts about what other objects
+                    <i>in</i> the universe are doing relative to <i>me</i>.
+                </p>
+                <p>
+                    We will continue to be very preoccupied with the symmetries of space and time, so I will leave the
+                    subject alone for now.  In the meantime, let's fix our gaze on the objects which supposedly exhibit
+                    all this symmetry: space and time themselves.
+                </p>
+
                 <h2>Space and Time</h2>
 
                 <p>We will be using <b>spacetime diagrams</b> to visualize each step in our journey through Special
