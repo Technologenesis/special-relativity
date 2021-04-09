@@ -1,5 +1,15 @@
 import * as React from 'react';
-import {HorizontalGridLines, LineMarkSeries, LineSeries, VerticalGridLines, XAxis, XYPlot, YAxis, Borders} from "react-vis";
+import {
+    HorizontalGridLines,
+    LineMarkSeries,
+    LineSeries,
+    VerticalGridLines,
+    XAxis,
+    XYPlot,
+    YAxis,
+    Borders,
+    DiscreteColorLegend
+} from "react-vis";
 import {matrix, multiply, add, inv, abs, subset, index} from 'mathjs';
 
 class SpacetimeDiagram extends React.Component {
@@ -116,6 +126,7 @@ class SpacetimeDiagram extends React.Component {
                     <XAxis title={"Space (" + this.props.spaceUnits + ")"}/>
                     <YAxis title={"Time (" + this.props.timeUnits + ")"} tickTotal={this.props.showTimeOnAxis ? 10 : 0} position="middle"/>
                 </XYPlot>
+                <DiscreteColorLegend items={this.state.observers.map(observer => observer.name)} orientation={"horizontal"}/>
                 <p>{this.props.debug ? JSON.stringify(this.state.observers) : null}</p>
             </div>
         );

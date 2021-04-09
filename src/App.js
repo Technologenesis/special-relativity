@@ -74,26 +74,26 @@ class App extends React.Component {
                     that an object is identical from multiple perspectives.
                 </p>
                 <p>
-                    Suppse now that I take you out to lunch as an apology.  During our meal, we notice a mysterious line
+                    Suppose now that I take you out to lunch as an apology.  During our meal, we notice a mysterious line
                     drawn along the ground.  After sufficient assurance on my part that this isn't some kind of trick,
                     we approach the line and investigate.
                 </p>
                 <p>
                     The line appears to go on forever in all directions.  We conclude that this line also has a sort of
-                    symmetry: we can follow the line in a straight line in whichever direction the line points, as far
-                    as we want, and the line will appear the same.  So we set down our things and follow the line as far
-                    as we can, for miles and miles, until finally, we come upon the place where we started.  That we
-                    recognize this point means we must have been wrong about the symmetry this object possesses.  While
-                    it's true that every point along our journey has been identical, we know that we are seeing a
-                    <i>different kind</i> of symmetry.  It appears that what we thought was a line was actually just
-                    a very large circle, and that the symmetry we were observing wasn't the <i>translational</i>
-                    symmetry of a line, but the <i>rotational</i> symmetry of a circle.  But the limits of our
-                    perspective stopped us from seeing this fact.
+                    symmetry: we can follow the line in either direction, as far as we want, and the line will appear
+                    the same.  So we set down our things and follow the line as far as we can, for miles and miles,
+                    until finally, we come upon the place where we started.  That we recognize this point means we must
+                    have been wrong about the symmetry this object possesses.  While it's true that every point along
+                    our journey has been identical, we know that we are seeing a<i>different kind</i> of symmetry.
+                    It appears that what we thought was a line was actually just a very large circle, and that the
+                    symmetry we were observing wasn't the <i>translational</i> symmetry of a line, but the
+                    <i>rotational</i> symmetry of a circle.  But the limits of our perspective stopped us from seeing
+                    this fact.
                 </p>
                 <p>
                     Our universe, too, appears to be symmetric in many ways.  Taking the laws of physics together as a
                     "description" of the universe, there are many ways in which a person can shift their perspective
-                    while that description remains valid.  For instance, I can carry out some experiment in America,
+                    while that description remains valid.  For instance, I can carry out some closed experiment in America,
                     and expect to get the same results in Spain - assuming nothing about the experiment has changed
                     except the location.  So the universe, like the line, appears to exhibit
                     <i>translational</i> symmetry.  Similarly, I can carry out an experiment, then face some other
@@ -103,14 +103,22 @@ class App extends React.Component {
                     relevantly for us - I can carry out an experiment at some constant speed, and then carry it out at
                     <i>another</i> constant speed, and still get the same results.  The universe thus appears to exhibit
                     symmetry across changes in velocity.  In all these cases, my description of the universe
-                    <i>itself</i> remains identical, although I might have different thoughts about what other objects
-                    <i>in</i> the universe are doing relative to <i>me</i>.
+                    <i>itself</i> - the laws of physics that govern my experiment - remains identical, although I might
+                    have different thoughts about what other objects <i>in</i> the universe are doing relative to
+                    <i>me</i>.
+                </p>
+                <p>
+                    However, we might ask ourselves what limitations the smallness of our perspective might be placing
+                    on our understanding of the nature of these symmetries.  This is the question we will reckon with
+                    here.
                 </p>
                 <p>
                     We will continue to be very preoccupied with the symmetries of space and time, so I will leave the
                     subject alone for now.  In the meantime, let's fix our gaze on the objects which supposedly exhibit
                     all this symmetry: space and time themselves.
                 </p>
+
+                <h3>Symmetry: A Mathematical treatment</h3>
 
                 <h2>Space and Time</h2>
 
@@ -188,29 +196,36 @@ class App extends React.Component {
                 relativity</b>, which states that the laws of physics should apply equally regardless of <b>inertial
                 reference frame</b>. In other words, a person cruising along in a spaceship moving at a constant speed
                 follows the same physical laws as a stationary person.  Indeed, it should not be necessary, <i>nor even
-                possible</i>, for either of them to know which of them is moving.
+                possible</i>, for either of them to know which of them is moving.  Hence, Galileo asserts the existence
+                of a universal <i>symmetry</i> - the symmetry over velocity.
                 </p>
 
-                <p>This sounds like a very simple principle, but it poses a couple of challenges for anyone tasked with
-                transcribing the physical laws of the universe, which must be solved in order.  Firstly, how do we model
-                the change in reference frame?  And secondly, how do we write the laws of physics so that
-                they don't change if we transform our reference frame according to that model?  The first question has a
-                simple, intuitive answer: to translate a velocity from one reference frame to the next, simply subtract
-                the velocity of the new frame.</p>
-
+                <p>
+                    This sounds like a very simple principle, but it poses a couple of challenges for anyone tasked with
+                    transcribing the physical laws of the universe, which must be solved in order.  The more obvious
+                    is the <i>second</i> question: how do we write the laws in such a way that that they are
+                    <b>invariant</b> over the given symmetry - meaning observers in two symmetric perspectives wouldn't
+                    see a difference in the laws?  If our laws are to accurately describe the universe, they must be
+                    symmetric in exactly the same way the universe is.
+                </p>
+                <p>
+                    However, this is only relevant after a first question is answered - a much more subtle question with a
+                    seemingly intuitive answer.  That question is: <i>what kind of symmetry are we dealing with?</i>
+                    After all, if your laws are supposed to be invariant under some symmetry, you had better know what
+                    that symmetry is.
+                </p>
                 <p>
                     In concrete terms, take a person, Alice, who is riding a train.  Ahead of her, through the window,
                     she sees Bob by the tracks.  He is standing still on the ground, but relative to Alice, he is moving
                     towards her at -9 meters per second. Alice throws an apple at 12 meters per second, relative to her,
-                    towards Bob's head.  Assuming that all motion is happening in the same direction, to translate the
-                    apple's velocity into Bob's reference frame, we subtract his velocity from the apple's.
-                    Bob is therefore struck by the apple at 21 meters per second.
+                    towards Bob's head.  Assuming that all motion is happening in the same direction, how do we know how
+                    quickly the apple will hit Bob's head?  In other words, how fast is the apple moving from Bob's
+                    <i>perspective</i>?
                 </p>
 
-                <p>Here's the same scenario in spacetime diagram form.  Try switching between perspectives to understand
-                this relationship and how it appears on the diagram:</p>
+                <p>Here's the same scenario in spacetime diagram form:</p>
 
-                <SpacetimeDiagram showControls={false} showTimeOnAxis={true} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} c={Infinity} observers={[
+                <SpacetimeDiagram showControls={false} showFrameSelector={false} showTimeOnAxis={true} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} c={Infinity} observers={[
                     {
                         name: "Alice",
                         proper_time: 0,
@@ -228,13 +243,68 @@ class App extends React.Component {
                     }
                 ]}/>
 
-                <p>This method of switching between inertial reference frames is called a
-                <b>Galilean transformation</b>, and they form part of the foundation of Newtonian mechanics.  However,
-                by Einstein's time there were some alarming discoveries in physics that seemed to defy this very basic
-                principle: the laws of physics appeared to actually <i>change</i> based on inertial reference frame.
-                It appeared that for all the progress we had made in physics, something was wrong on the very
-                fundamental level.  It turned out that this problem had its roots all the way down at the structure of
-                space and time.
+                <p>
+                We <i>can</i> do experiments to try to figure out the relationships between these perspectives.  Say
+                we set up some speed detector next to Bob and carry out the experiment again to see what happens.
+                </p>
+                <p>
+                The experiment doesn't reproduce perfectly - Bob is much angrier this time - but it works well enough
+                for us, and you know that if you say anything, you could end up on the wrong side of one of these
+                experiments again.  We see that from Bob's perspective, the diagram looks something like this:
+                </p>
+
+                <SpacetimeDiagram showControls={false} showFrameSelector={false} showTimeOnAxis={true} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} c={Infinity} observers={[
+                    {
+                        name: "Alice",
+                        proper_time: 0,
+                        relative_velocity: 9
+                    },
+                    {
+                        name: "Bob",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    },
+                    {
+                        name: "Apple",
+                        proper_time: 0,
+                        relative_velocity: 21
+                    }
+                ]}/>
+
+                <p>
+                    The apple, then, appears to be going at its speed from Alice's perspective, <i>plus</i>
+                    <i>Alice's</i> speed from <i>Bob's</i> perspective.  In other words, velocities seem to
+                    <i>add</i>!  We can incorporate this into our model of spacetime: we now know that the
+                    universe is symmetric under velocity addition, so we can build in the ability to add
+                    velocities in order to switch between reference frames:
+                </p>
+
+                <SpacetimeDiagram showControls={false} showFrameSelector={true} showTimeOnAxis={true} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} c={Infinity} observers={[
+                    {
+                        name: "Alice",
+                        proper_time: 0,
+                        relative_velocity: 9
+                    },
+                    {
+                        name: "Bob",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    },
+                    {
+                        name: "Apple",
+                        proper_time: 0,
+                        relative_velocity: 21
+                    }
+                ]}/>
+
+                <p>
+                    This method of switching between inertial reference frames is called a
+                    <b>Galilean transformation</b>, and they form part of the foundation of Newtonian mechanics.  However,
+                    by Einstein's time there were some alarming discoveries in physics that seemed to defy this very basic
+                    principle: the laws of physics appeared to actually <i>change</i> based on inertial reference frame.
+                    It appeared that for all the progress we had made in physics, something was wrong on the very
+                    fundamental level.  It turned out that this problem had its roots all the way down at the structure of
+                    space and time.
                 </p>
 
                 <h3>Galilean Transformations: A Mathematical Treatment</h3>
