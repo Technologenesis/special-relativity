@@ -86,7 +86,7 @@ class SpacetimeDiagram extends React.Component {
             <div>
                 {
                     this.state.observers.map((observer, idx) =>
-                        <label key={idx}>V<sub>{observer.name}</sub>: <input type="range" min={-this.props.maxSpeed || -this.props.c} max={this.props.maxSpeed || this.props.c} step={this.props.step || .001} value={this.state.observers[idx].relative_velocity} onChange={event => this.set_relative_velocity(idx, event.target.value)}/>{this.state.observers[idx].relative_velocity + " " + (this.props.velocityUnits || (this.props.spaceUnits + "/" + this.props.timeUnits))}<br/></label>
+                        <label key={idx}>V<sub>{observer.name}</sub>: <input type="range" min={-this.props.maxSpeed || -this.props.c} max={this.props.maxSpeed || this.props.c} step={this.props.step || .001} value={this.state.observers[idx].relative_velocity} onChange={event => this.set_relative_velocity(idx, event.target.value)}/>{this.state.observers[idx].relative_velocity.toFixed(3) + " " + (this.props.velocityUnits || (this.props.spaceUnits + "/" + this.props.timeUnits))}<br/></label>
                     )
                 }
             </div>
@@ -95,7 +95,7 @@ class SpacetimeDiagram extends React.Component {
             <button onClick={this.togglePaused}>{this.state.paused ? "Play" : "Pause"}</button>
         ) : null;
         return (
-            <div style={{margin: "0 auto", backgroundColor: "#f0ffff", boxShadow: "0px 0px 5px #446688", borderRadius: 10, padding: 10, width: 500}}>
+            <div className={"SpacetimeDiagram"}>
                 {frameSelector}<br/>
                 {controls}<br/>
                 {pauseButton}<br/>

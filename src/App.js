@@ -4,6 +4,7 @@ import * as React from "react";
 import * as Latex from 'react-latex';
 import '../node_modules/react-vis/dist/style.css';
 import {sin, cos, atan} from 'mathjs';
+import Collapsible from "react-collapsible";
 
 class App extends React.Component {
     render() {
@@ -82,35 +83,40 @@ class App extends React.Component {
                     The line appears to go on forever in all directions.  We conclude that this line also has a sort of
                     symmetry: we can follow the line in either direction, as far as we want, and the line will appear
                     the same.  So we set down our things and follow the line as far as we can, for miles and miles,
-                    until finally, we come upon the place where we started.  That we recognize this point means we must
-                    have been wrong about the symmetry this object possesses.  While it's true that every point along
-                    our journey has been identical, we know that we are seeing a<i>different kind</i> of symmetry.
+                    until finally, we come upon the place where we started.
+
+                    That we recognize this point means we must have been wrong about the symmetry this object possesses.
+                    I mean, yes, clearly it <i>is</i> symmetrical in some way - it looked identical to us at every step
+                    of our journey.  But you don't get back where you started just by walking along a straight line.
                     It appears that what we thought was a line was actually just a very large circle, and that the
                     symmetry we were observing wasn't the <i>translational</i> symmetry of a line, but the
-                    <i>rotational</i> symmetry of a circle.  But the limits of our perspective stopped us from seeing
-                    this fact.
+                    <i>rotational</i> symmetry of a circle.  We were right about the symmetry, but we were wrong
+                    about the <i>nature</i> of the symmetry - because the smallness of our perspective kept us from
+                    seeing what was really happening. Keep this example in the back of your mind.  We will be returning
+                    to it periodically.
                 </p>
                 <p>
                     Our universe, too, appears to be symmetric in many ways.  Taking the laws of physics together as a
                     "description" of the universe, there are many ways in which a person can shift their perspective
-                    while that description remains valid.  For instance, I can carry out some closed experiment in America,
-                    and expect to get the same results in Spain - assuming nothing about the experiment has changed
-                    except the location.  So the universe, like the line, appears to exhibit
-                    <i>translational</i> symmetry.  Similarly, I can carry out an experiment, then face some other
-                    direction and carry it out again, and still expect the same results.  So the universe appears to
-                    exhibit <i>rotational</i> symmetry. I can wait an hour and do the experiment <i>again</i> and still
-                    expect the same result - so the universe exhibits symmetry across <i>time</i>.  And finally - most
-                    relevantly for us - I can carry out an experiment at some constant speed, and then carry it out at
-                    <i>another</i> constant speed, and still get the same results.  The universe thus appears to exhibit
-                    symmetry across changes in velocity.  In all these cases, my description of the universe
-                    <i>itself</i> - the laws of physics that govern my experiment - remains identical, although I might
-                    have different thoughts about what other objects <i>in</i> the universe are doing relative to
-                    <i>me</i>.
+                    while that description remains valid.  For instance, I can carry out some closed experiment in
+                    America, and expect to get the same results in Spain - assuming nothing about the experiment has
+                    changed except the location.  So the universe, like the line, appears to exhibit
+                    <i>translational</i> symmetry.
                 </p>
                 <p>
-                    However, we might ask ourselves what limitations the smallness of our perspective might be placing
-                    on our understanding of the nature of these symmetries.  This is the question we will reckon with
-                    here.
+                    Similarly, I can carry out an experiment, then face some other direction and carry it out again,
+                    and still expect the same results.  So the universe appears to  exhibit <i>rotational</i> symmetry.
+                    I can wait an hour and do the experiment <i>again</i> and still expect the same result - so the
+                    universe exhibits symmetry across <i>time</i>.  And finally - most relevantly for us - I can carry
+                    out an experiment at some constant speed, and then carry it out at <i>another</i> constant speed,
+                    and still get the same results.  The universe thus appears to exhibit symmetry across changes in
+                    velocity.  In all these cases, my description of the universe <i>itself</i> - the laws of physics
+                    that govern my experiment - remains identical.
+                </p>
+                <p>
+                    However, just as when we saw the line along the ground, we might ask ourselves what limitations the
+                    smallness of our perspective might be placing on our understanding of the nature of these
+                    symmetries.  This is the question we will reckon with here.
                 </p>
                 <p>
                     We will continue to be very preoccupied with the symmetries of space and time, so I will leave the
@@ -118,7 +124,193 @@ class App extends React.Component {
                     all this symmetry: space and time themselves.
                 </p>
 
-                <h3>Symmetry: A Mathematical treatment</h3>
+                <Collapsible trigger={(<h3>Symmetry: A Mathematical treatment</h3>)}>
+                    <p>
+                        The ultimate goal of this site is to motivate relativity <i>intuitively</i>, without requiring a
+                        math background and accommodating a certain level of arithmephobia.  However, I want to offer the
+                        reader the opportunity to dive into the math if they so choose.  These sections aren't strictly
+                        necessary to digest the argument being made, but learning the math can help ground the information
+                        more solidly and thus give the reader better footing on which to reason.  The reader is thus
+                        encouraged to at least try wading through the math - without worrying about moving on if it's
+                        difficult to process.
+                    </p>
+                    <p>
+                        This section isn't full of <i>equations</i>, per se, but it nonetheless contains some
+                        mathematical reasoning leading up to a formal definition.  It's not strictly necessary; the
+                        intuitive notion of symmetry is enough to digest what comes from here on out, but we will give it a
+                        bit of a deeper treatment so that where intuition breaks down, the math will be here to ground us.
+                        So with that, let's introduce the mathematical discipline concerned with symmetry: <b>group
+                        theory</b>.
+                    </p>
+                    <p>
+                        Group theory describes the ways in which a thing can be symmetrical.  Recall our informal definition
+                        of symmetry: it is the property that a thing can be described the same way from multiple
+                        perspectives. In these terms, then, group theory is about how these perspectives are related to each
+                        other.  That probably sounds pretty abstract.  Let's go back to an example - but you're not going to
+                        like where it is.
+                    </p>
+                    <p>
+                        For instance, the triangle we had our little incident on earlier is a - hey, come back!  I'll keep
+                        my hands in plain sight.  This triangle is a symmetric object, so its symmetry can can be
+                        represented in group theory. We'll introduce the <b>group</b> representing the triangle's symmetries
+                        by describing that symmetry ourselves.  Let's take a walk...
+                    </p>
+                    <p>
+                        We walk around the whole triangle, counting the points as we go.  This time, to stress the sameness
+                        of each perspective, we won't even bother to name the points.  The first thing we do is walk
+                        clockwise to the adjacent point.
+                    </p>
+                    <p>
+                        As before, we note that this triangle still looks exactly the same.  I mean, we <i>know</i> we
+                        didn't start here, but we wouldn't be able to tell just by looking.  Therefore, we've found some
+                        new perspective under which our object is completely identical.  And since it's identical, we should
+                        be able to do the same thing again and get the exact same result.
+                    </p>
+                    <p>
+                        So we continue our walk, clockwise again, to the next point, and find that we have <i>again</i>
+                        found a brand new perspective from which the triangle is identical.  We then continue, clockwise
+                        once more, and we do indeed find a perspective from which the triangle is identical - but this time,
+                        it's one we've already seen.  It's the point we started on in the first place.
+                    </p>
+                    <p>
+                        So we have three symmetric perspectives, all related to each other by a single action: the act of
+                        walking clockwise along the triangle's sides.  From any point on the triangle, we can get to any
+                        other point by repeatedly applying this action.
+                    </p>
+                    <p>
+                        Given this, let's think about how we might talk about the different points of the triangle.  We
+                        already agreed not to give them static names; after all, if we ever forget which one's which, then
+                        the names are useless.  Much more relevant to us, as individuals who are only ever inhabiting one of
+                        these points, is to describe the points in terms of how we can get to each one.  We can then name the
+                        points as follows: the point we are standing on we will call <i>e</i>; this is a special point in
+                        our naming system, since we don't need to do anything to get there.  From here we can apply
+                        our action - walking clockwise - arbitrarily many times.  We will call a single application of this
+                        action <i>r</i>, two applications <i>r<sup>2</sup></i>, three applications <i>r<sup>3</sup></i>,
+                        and so on.  So, the point immediately clockwise to us we will call <i>r</i>, since it takes us only
+                        one walk to get there; the point counterclockwise to us will be called <i>r<sup>2</sup></i>, since
+                        it takes two clockwise walks to get there.  We could speak of <i>r<sup>3</sup></i>,
+                        <i>r<sup>4</sup></i>, and on down the line, but there's no need: we already have a name for these,
+                        since three applications of <i>r</i> gets us right back where we started.  In other words,
+                        <i>r<sup>3</sup> = e</i>.
+                    </p>
+                    <p>
+                        We have now boiled down the symmetry of the triangle to its <i>most basic</i> elements: there is
+                        something we can do to it that leaves it looking identical, and if we do that thing three times, we
+                        get back where we started.  These are the defining properties of <i>C<sub>3</sub></i>, a
+                        mathematical object called a <i>group</i> which describes three-fold rotational symmetry - the
+                        symmetry of our triangle. At last, we are ready to look at a formal definition:
+                    </p>
+                    <Latex displayMode={true}>$$ C_3 = \langle r | r^3 = e \rangle $$</Latex>
+                    <p>
+                        We can read this is follows: <i>C<sub>3</sub></i> is the group consisting of repeated applications
+                        of the action <i>r</i>, such that <i>r<sup>3</sup> = e</i>.  <i>C<sub>3</sub></i> is short for the
+                        <b>cyclic group</b> of order three - the <b>order</b> being the number of distinct elements in the
+                        group.  The symmetry group of a rotatable square, similarly, would be <i>C<sub>4</sub></i> - the
+                        cyclic group of order 4.
+                    </p>
+                    <p>
+                        In general, a group consists, for one part, of all the <i>actions</i> that can be done to an object
+                        which leave it looking identical.  It also consists of an operation known as composition, &bull;,
+                        corresponding to the act of doing one action after the other.  Composing any two actions must always
+                        be a valid action; after all, if the first action leaves the object unchanged, then why would the
+                        second action no longer be valid?
+                    </p>
+                    <p>
+                        Further, among its valid actions, the group must contain some <i>identity element</i>, which
+                        represents taking <i>no</i> action.  Composing any action <i>a</i> with the identity action is the
+                        same as just doing <i>a</i>.  Every action must also be invertible - for every action
+                        <i>a</i> there must be another action <i>a<sup>-1</sup></i> that is its <i>inverse</i>, so that
+                        <i>a &bull; a<sup>-1</sup> = e</i>; that is, doing one action and then its inverse is the same as
+                        doing nothing.  After all, if we can walk clockwise around the triangle, can't we then walk
+                        <i>counter-</i>clockwise and end up where we started?
+                    </p>
+                    <p>
+                        The final property of these actions is a bit more subtle.  Take 3 actions, <i>a</i>, <i>b</i>
+                        and <i>c</i>.  Now, surely doing a followed by b and c is the same as doing a and b, followed by c?
+                        Or, formally, <i>a &bull; (b &bull; c) = (a &bull; b) &bull; c</i>.
+                    </p>
+                    <p>
+                        With that, we have the definition of a <b>group</b>: it is a set <i>G</i> of "actions" on which is
+                        defined a composition operator &bull; which has the following four properties:
+                        <ul>
+                            <li>
+                                <b>closure</b>: the operation &bull; is <i>closed</i> over <i>G</i>.  This means that for
+                                any two elements <i>a</i> and <i>b</i> of <i>G</i>, their composition
+                                <i>a &bull; b</i> is also in <i>G</i>.
+                            </li>
+                            <li>
+                                <b>identity</b>: there exists an <i>identity element</i>, e, which is the <i>do-nothing
+                                action</i>.  For any element <i>a</i> in the set <i>G</i>,
+                                <i>e &bull; a = a &bull; e = a</i>.
+                            </li>
+                            <li>
+                                <b>invertibility</b>: for any element <i>a</i>, there is an <i>inverse</i> element
+                                <i>a<sup>-1</sup></i> such that
+                                <i>a &bull; a<sup>-1</sup> = a<sup>-1</sup> &bull; a = e</i>.
+                            </li>
+                            <li>
+                                <b>associativity</b>: for any elements <i>a</i>, <i>b</i> and <i>c</i>,
+                                <i>a &bull; (b &bull; c) = (a &bull; b) &bull; c</i>.
+                            </li>
+                        </ul>
+                    </p>
+                    <p>
+                        Since the universe also has symmetry, there should be a way to describe this symmetry in
+                        group theoretic terms.  Take, for example, the universe's translational symmetry: the property
+                        that it's identical no matter <i>where</i> we view it from.  But this is a little different:
+                        our triangle had a finite number of symmetric perspectives, while the universe appears to have
+                        an infinite number.  Let's think about how to represent such a group; we will begin with the
+                        translational symmetry of a simple 1-dimensional line, and expand this definition to the three
+                        dimensions of the universe.
+                    </p>
+                    <p>
+                        Recall the two parts that form a group definition: a set <i>G</i> of possible actions, and an
+                        operator &bull; representing composition.  Let's start with <i>G</i>: we want a set of all possible
+                        actions.  How many ways are there to slide a line along itself?
+                    </p>
+                    <p>
+                        Well, let's say I break the line up into units.  I can slide it one meter forwards, or one meter
+                        backwards.  I can also slide it two meters forwards, or two meters backwards.  Or two and a half
+                        meters forward, or &pi; meters backwards.  Clearly, I can slide the line any distance I want; so
+                        the set <i>G</i> consists of an action for every possible distance I could slide the line.  We can
+                        represent this simply by allowing <i>G</i> to be the set of real numbers &#x211D;.
+                    </p>
+                    <p>
+                        If we were to do more than one of these actions in a row, we would see that moving the line
+                        by <i>a</i> followed by <i>b</i> leaves the line as if we had simply moved it by <i>a+b</i>.  So the
+                        operator representing composition, for us, is simply the addition operator +.
+                    </p>
+                    <p>
+                        We can now define our group in different notation than the above group: we will say it is the
+                        set of real numbers paired with addition:
+                    </p>
+                    <Latex displayMode={true}>$$(\reals, +)$$</Latex>
+                    <p>
+                        We can see that this definition satisfies our group requirements.  Addition is closed over the
+                        real numbers: the sum of two real numbers is always another real number.  There is an identity
+                        element, 0, corresponding to not moving along the line at all.  Every element also has an inverse:
+                        every real number has a <i>negative</i> with which it adds to zero, corresponding to moving the
+                        line and then moving it right back to where it was, which is the same as doing nothing.  Finally,
+                        addition is associative: <i>(a + b) + c = a + (b + c)</i>.
+                    </p>
+                    <p>
+                        The 3D symmetry of the universe can be expressed similarly.  The only difference is that we can
+                        translate as much as we want in <i>any direction</i>.  We can express this as a combination of
+                        shifts in all three dimensions.  So rather than operating over the set of real numbers &#x211D;, we
+                        are operating over all <b>tuples</b> (or ordered sets) of 3 real numbers, where each number in the
+                        tuple corresponds to translation in one of our three dimensions:
+                    </p>
+                    <Latex displayMode={true}>$$(\reals^3, +)$$</Latex>
+                    <p>
+                        We will think more deeply about some of the universe's other symmetries later.  For now,
+                        a brief parting word to the wise: note that the definition of a group does not
+                        include <b>commutativity</b>.  Commutativity is the property that for two elements of our
+                        set <i>a</i> and <i>b</i>, <i>a &bull; b = b &bull; a</i>.  This happens to have been the case for
+                        every group we've defined so far, so I want to make clear that this by no means needs to be true.  A
+                        group having this property is called an <i>abelian group</i>, but as far as groups alone are
+                        concerned, the order of the operands can absolutely matter.
+                    </p>
+                </Collapsible>
 
                 <h2>Space and Time</h2>
 
@@ -255,14 +447,14 @@ class App extends React.Component {
 
                 <SpacetimeDiagram showControls={false} showFrameSelector={false} showTimeOnAxis={true} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} c={Infinity} observers={[
                     {
-                        name: "Alice",
-                        proper_time: 0,
-                        relative_velocity: 9
-                    },
-                    {
                         name: "Bob",
                         proper_time: 0,
                         relative_velocity: 0
+                    },
+                    {
+                        name: "Alice",
+                        proper_time: 0,
+                        relative_velocity: 9
                     },
                     {
                         name: "Apple",
@@ -307,106 +499,107 @@ class App extends React.Component {
                     space and time.
                 </p>
 
-                <h3>Galilean Transformations: A Mathematical Treatment</h3>
+                <Collapsible trigger={(<h3>Galilean Transformations: A Mathematical Treatment</h3>)}>
+                    <p>
+                        Here I will take a brief mathematical detour to describe these transformations more precisely; feel free
+                        to skip to the next section if you're not comfortable with some simple math.  However, if you <i>are</i>
+                        comfortable with simple math, I encourage you to read this section.  The symbols may be intimidating,
+                        but the math itself is no more complicated than linear functions in pre-algebra.
+                    </p>
 
-                <p>
-                Here I will take a brief mathematical detour to describe these transformations more precisely; feel free
-                to skip to the next section if you're not comfortable with some simple math.  However, if you <i>are</i>
-                comfortable with simple math, I encourage you to read this section.  The symbols may be intimidating,
-                but the math itself is no more complicated than linear functions in pre-algebra.
-                </p>
+                    <p>
+                        Take a reference frame, <i>S</i>, and some arbitrary coordinates in that frame <i>(x,y,z,t)</i>.
+                        Say we want to translate these coordinates to a new frame, S', which is identical to S except that
+                        it is moving relative to <i>S</i> with velocity <i>v</i> in the positive <i>x</i> direction.  We can
+                        do that transformation as follows:
+                    </p>
 
-                <p>
-                    Take a reference frame, <i>S</i>, and some arbitrary coordinates in that frame <i>(x,y,z,t)</i>.
-                    Say we want to translate these coordinates to a new frame, S', which is identical to S except that
-                    it is moving relative to <i>S</i> with velocity <i>v</i> in the positive <i>x</i> direction.  We can
-                    do that transformation as follows:
-                </p>
+                    <p>
+                        x' = x-vt<br/>
+                        y' = y<br/>
+                        z' = z<br/>
+                        t' = t<br/>
+                    </p>
 
-                <p>
-                x' = x-vt<br/>
-                y' = y<br/>
-                z' = z<br/>
-                t' = t<br/>
-                </p>
+                    <p>
+                        We can ignore the middle two equations for now since they leave <i>y</i> and <i>z</i> unchanged.
+                        Linear Algebra fans will recognize this as a <b>sheer transformation</b> representable by matrix
+                        multiplication:
+                    </p>
 
-                <p>
-                    We can ignore the middle two equations for now since they leave <i>y</i> and <i>z</i> unchanged.
-                    Linear Algebra fans will recognize this as a <b>sheer transformation</b> representable by matrix
-                    multiplication:
-                </p>
-
-                <Latex displayMode={true}>{
-                    '$\\begin{bmatrix}' +
-                    'x\'\\\\' +
-                    't\'\\\\' +
-                    '\\end{bmatrix}' +
-                    ' = ' +
-                    '\\begin{bmatrix}' +
+                    <Latex displayMode={true}>{
+                        '$\\begin{bmatrix}' +
+                        'x\'\\\\' +
+                        't\'\\\\' +
+                        '\\end{bmatrix}' +
+                        ' = ' +
+                        '\\begin{bmatrix}' +
                         '1 & -v \\\\' +
                         '0 & 1' +
-                    '\\end{bmatrix}' +
-                    '\\begin{bmatrix}' +
+                        '\\end{bmatrix}' +
+                        '\\begin{bmatrix}' +
                         'x\\\\' +
                         't\\\\' +
-                    '\\end{bmatrix}$'
-                }</Latex>
+                        '\\end{bmatrix}$'
+                    }</Latex>
 
-                <p>
-                As an example, take a body which starts at position <i>p<sub>0</sub> = (x<sub>0</sub>, y<sub>0</sub>,
-                z<sub>0</sub>)</i> at t=0.  It's moving at a constant velocity of <i>v<sub>body</sub></i> in the x
-                direction in frame S.  Since both our frames and our body are only moving in the x direction, we will
-                deal only with x and t.
-                </p>
-                <p>
-                    We will call the body's <i>x</i> position over time x<sub>body</sub>.  The
-                    constant velocity implies that x<sub>body</sub> varies linearly with t with slope v<sub>body</sub>.
-                    Since x<sub>body</sub> = x<sub>0</sub> at t=0, we see that <i>x<sub>body</sub> = v<sub>body</sub>t+x<sub>0</sub></i>
-                </p>
-                <p>
-                Say we now want to find the velocity <i>v'<sub>body</sub></i> of the body in our secondary reference frame, <i>S'</i>. As in
-                <i>S</i>, we can write our position over time in frame <i>S'</i> as <i>x'<sub>body</sub></i>.
-                    From our first transformation rule, we see that <i>x'<sub>body</sub>=x<sub>body</sub>-vt</i>.
-                By substitution this leads to <i>x'<sub>body</sub>=v<sub>body</sub>t+x<sub>0</sub>-vt</i>.
-                </p>
+                    <p>
+                        As an example, take a body which starts at position <i>p<sub>0</sub> = (x<sub>0</sub>, y<sub>0</sub>,
+                        z<sub>0</sub>)</i> at t=0.  It's moving at a constant velocity of <i>v<sub>body</sub></i> in the x
+                        direction in frame S.  Since both our frames and our body are only moving in the x direction, we will
+                        deal only with x and t.
+                    </p>
+                    <p>
+                        We will call the body's <i>x</i> position over time x<sub>body</sub>.  The
+                        constant velocity implies that x<sub>body</sub> varies linearly with t with slope v<sub>body</sub>.
+                        Since x<sub>body</sub> = x<sub>0</sub> at t=0, we see that <i>x<sub>body</sub> = v<sub>body</sub>t+x<sub>0</sub></i>
+                    </p>
+                    <p>
+                        Say we now want to find the velocity <i>v'<sub>body</sub></i> of the body in our secondary reference frame, <i>S'</i>. As in
+                        <i>S</i>, we can write our position over time in frame <i>S'</i> as <i>x'<sub>body</sub></i>.
+                        From our first transformation rule, we see that <i>x'<sub>body</sub>=x<sub>body</sub>-vt</i>.
+                        By substitution this leads to <i>x'<sub>body</sub>=v<sub>body</sub>t+x<sub>0</sub>-vt</i>.
+                    </p>
 
-                <p>
-                    We can rearrange this to arrive at <i>x'<sub>body</sub>=(v<sub>body</sub>-v)t+x<sub>0</sub></i>.
-                    We can use our fourth transformation rule to convert our time coordinate: <i>x'<sub>body</sub>=(v<sub>body</sub>-v)t'+x<sub>0</sub></i>
-                    We see that this is a linear function of t' with constant slope.  The velocity in frame S' is the
-                    change in x' over the change in t', so this constant slope implies a constant velocity
-                    <i>v'<sub>body</sub> = v<sub>body</sub>-v</i>
-                </p>
+                    <p>
+                        We can rearrange this to arrive at <i>x'<sub>body</sub>=(v<sub>body</sub>-v)t+x<sub>0</sub></i>.
+                        We can use our fourth transformation rule to convert our time coordinate: <i>x'<sub>body</sub>=(v<sub>body</sub>-v)t'+x<sub>0</sub></i>
+                        We see that this is a linear function of t' with constant slope.  The velocity in frame S' is the
+                        change in x' over the change in t', so this constant slope implies a constant velocity
+                        <i>v'<sub>body</sub> = v<sub>body</sub>-v</i>
+                    </p>
 
-                <SpacetimeDiagram showTimeOnAxis={true} animateAxisTime={false} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} c={Infinity} observers={[
-                    {
-                        name: "Frame S",
-                        proper_time: 0,
-                        relative_velocity: 0
-                    },
-                    {
-                        name: "Frame S'",
-                        proper_time: 0,
-                        relative_velocity: -9
-                    },
-                    {
-                        name: "body",
-                        proper_time: 0,
-                        relative_velocity: 12
-                    }
-                ]}/>
+                    <SpacetimeDiagram showTimeOnAxis={true} animateAxisTime={false} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} c={Infinity} observers={[
+                        {
+                            name: "Frame S",
+                            proper_time: 0,
+                            relative_velocity: 0
+                        },
+                        {
+                            name: "Frame S'",
+                            proper_time: 0,
+                            relative_velocity: -9
+                        },
+                        {
+                            name: "body",
+                            proper_time: 0,
+                            relative_velocity: 12
+                        }
+                    ]}/>
 
-                <p>
-                This may seem like a long walk for a short drink of water, but that's only because in this case, the
-                result happens to correspond to our intuition.  We will use similar logic later to uncover some of the
-                bizarre properties of actual spacetime.
-                </p>
-                <p>
-                Note that this math doesn't really correspond to a physical law; we aren't observing how objects
-                <i>behave</i>.  We're describing how they <i>appear</i> to change based on our <i>perspective</i>.  It
-                therefore more closely corresponds to the structure of space itself rather than the laws that govern
-                its contents.
-                </p>
+                    <p>
+                        This may seem like a long walk for a short drink of water, but that's only because in this case, the
+                        result happens to correspond to our intuition.  We will use similar logic later to uncover some of the
+                        bizarre properties of actual spacetime.
+                    </p>
+                    <p>
+                        Note that this math doesn't really correspond to a physical law; we aren't observing how objects
+                        <i>behave</i>.  We're describing how they <i>appear</i> to change based on our <i>perspective</i>.  It
+                        therefore more closely corresponds to the structure of space itself rather than the laws that govern
+                        its contents.
+                    </p>
+                </Collapsible>
+
 
                 <h3>Spacetime Intervals: an Early Introduction</h3>
                 <p>
