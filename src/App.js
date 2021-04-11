@@ -216,8 +216,8 @@ class App extends React.Component {
                         second action no longer be valid?
                     </p>
                     <p>
-                        Further, among its valid actions, the group must contain some <i>identity element</i>, which
-                        represents taking <i>no</i> action.  Composing any action <i>a</i> with the identity action is the
+                        Further, among its valid actions, the group must contain some <i>identity element</i>, <i>e</i>,
+                        which represents taking <i>no</i> action.  Composing any action <i>a</i> with the identity action is the
                         same as just doing <i>a</i>.  Every action must also be invertible - for every action
                         <i>a</i> there must be another action <i>a<sup>-1</sup></i> that is its <i>inverse</i>, so that
                         <i>a &bull; a<sup>-1</sup> = e</i>; that is, doing one action and then its inverse is the same as
@@ -662,7 +662,7 @@ class App extends React.Component {
 
                 <h3>Spacetime Intervals: an Early Introduction</h3>
                 <p>
-                When we look at the equations representing Galilean Transformations, we might be tempted to ask why
+                When we think about these Galilean Transformations, we might be tempted to ask why
                 that <i>particular</i> transformation makes so much intuitive sense to us, and what we might find if we
                 adopted a different framework.
                 </p>
@@ -688,11 +688,11 @@ class App extends React.Component {
 
                 <p>
                 Notice that no matter how you adjust the object's relative speed, the dots on its line - its flow of
-                time - are equally spread along our graph's time axis.  This makes intuitive sense - it preserves a
-                universal flow of time.  But if we think of our diagram in terms of the stuff in the middle -
-                <b>spacetime</b> - and think of the distance the dots are travelling through it, we notice a strange
-                property.  For very fast bodies, the "dots" appear to move very quickly along the line - that is, they
-                appear to <i>speed up</i> through spacetime.
+                time - always adhere perfectly to the straight horizontal lines running across our time axis.
+                This makes intuitive sense - it preserves a universal flow of time.  But if we think of our diagram in
+                terms of the stuff in the middle - <b>spacetime</b> - and think of the distance the dots are travelling
+                through it, we notice a strange property.  For fast bodies, the "dots" appear to move very quickly
+                along the line - that is, they appear to <i>speed up</i> through spacetime.
                 </p>
                 <p>
                 And yet, when we switch into that object's frame of reference, its dots are spread out only by the
@@ -714,44 +714,74 @@ class App extends React.Component {
                 ]}/>
 
                 <p>
-                Despite the apparent difference in distance between dots, each body thus appears to experience their
-                movement in the exact same way.  The difference in distance thus does not appear to be <i>real</i>;
-                the perceived difference arises only from our <i>perspective</i>. To reflect this, we can develop a
-                notion of <i>distance</i> in our spacetime that is <b>invariant</b> to our perspective - i.e. it is
-                defined in such a way that all dots, for all observers, are separated by the same distance.
-
-                We will call this notion of distance the <b>spacetime interval</b>.  The spacetime interval between two
+                    Let's think about this from the perspective of symmetry.  If the universe is supposed to be symmetric
+                    under this transformation, surely we can't be inflating some distances and compressing others?
+                    Surely both observers should agree on the distance they're travelling through spacetime?
+                </p>
+                <p>
+                    Because of this, we must accept that the difference in distance is not <i>real</i>; the perceived
+                    difference arises only from our <i>perspective</i>.  In reality, therefore, distance through
+                    <i>spacetime</i> must not actually depend on distance through <i>space</i> at all!  This probably
+                    seems like a bit of a weird property, and in fact it is.  But it didn't seem all that weird before
+                    folks started thinking of space and time as intertwined, so we're kind of cheating.
+                </p>
+                <p>
+                We will call this notion of distance through spacetime the <b>spacetime interval</b>.  The spacetime interval between two
                 points in spacetime will be the amount of time a body travelling between them would experience
-                during its journey.
-
-                Since the dots line up along the time axis no matter what, their distance can be given very simply:
-                where <i>&Delta;s</i> represents the distance between two points in <b>spacetime</b> and <i>&Delta;t</i>
-                represents their distance along the time axis, <i>&Delta;s = &Delta;t</i>.  How bizarre!  Distances in <i>spacetime</i> appear to be totally
-                independent of distance in <i>space</i>!
+                during its journey.  So the fact that all the dots line up with the time axis - that
+                distance through spacetime depends only on distance through time - ensures that all moving bodies
+                experience time at the same rate, regardless of their speed.
+                </p>
+                <SpacetimeDiagram paused={false} showControls={true} showLightRays={false} maxSpeed={10} spaceUnits="meters" c={Infinity} observers={[
+                    {
+                        name: "A",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    },
+                    {
+                        name: "B",
+                        proper_time: 0,
+                        relative_velocity: 1.5
+                    },
+                    {
+                        name: "C",
+                        proper_time: 0,
+                        relative_velocity: 3
+                    },
+                    {
+                        name: "D",
+                        proper_time: 0,
+                        relative_velocity: -2
+                    }
+                ]}/>
+                <p>
+                    As a little thought experiment, let's think about what would happen if this <i>weren't</i> the case.
+                    What if, for example, distance through <i>spacetime</i> worked the same way as distance through
+                    regular <i>space</i>?
                 </p>
                 <p>
-                As a little thought experiment, let's think about what would happen if this <i>weren't</i> the case.
-                What if distance through <i>spacetime</i> worked the same way as distance through <i>space</i> - which,
-                as you may recall, is expressed by the <b>Pythagorean theorem</b>:
+                    In regular space, moving 3 meters forward puts you exactly 3 meters from where you started; but moving
+                    3 meters left <i>and</i> 3 meters forward puts you farther away than that; something like
+                    4.25 meters from where you started.  Let's say you're hooked up to a three meter chain.  You could -
+                    okay, fine.  Bob!  Get over here.
                 </p>
-
-                <Latex displayMode={true}>{'$\\Delta s = \\sqrt{\\Delta x^2+\\Delta y^2+\\Delta z^2}$'}</Latex>
-
                 <p>
-                    To describe distance through space<i>time</i>, we could easily slip time into this equation:
+                    Let's say Bob is hooked up to a three meter chain.  He could walk
+                    three meters forward <i>or</i> three meters left; but not both.  He's constrained by a three
+                    meter circle which simply won't let him go that far.
                 </p>
-
-                <Latex displayMode={true}>{'$\\Delta s = \\sqrt{\\Delta x^2+\\Delta y^2+\\Delta z^2+c^2\\Delta t^2}$'}</Latex>
-                <Latex>
-                    Where $$c$$ is an arbitrary constant for converting between units of time and units of space.  The
-                    fact that it shares a name with the speed of light is no accident, but we will get there later.
-                </Latex>
+                <p>
+                    By contrast, in the spacetime we've been describing, distance depends only on time; so a person can
+                    go as far as they want along their space axis with no tradeoff to the distance they travel through
+                    time.  But what if they did?  What if they made the same tradeoff Bob makes?  We would expect to see
+                    that as their time dots get further away in space, they would get closer to the origin; the same way
+                    that the farther Bob moves to the left, the less he can move forward.
+                </p>
                 <p>
                     Let's try plotting this on a spacetime diagram.  It will look a lot like our other ones, only the
                     dots along each line will no longer be redundant: they will reflect <i>distance</i> through
                     spacetime along the lines, which the moving body will experience as a second.
                 </p>
-
                 <SpacetimeDiagram id="pythagorean_spacetime" c={3e8} maxSpeed={5} spaceUnits={"meters"} axisTicksX={10} showLightRays={false} transform={(velocity, c) => {
                     let theta = velocity*atan(1/c);
                     return [
@@ -775,28 +805,29 @@ class App extends React.Component {
                         proper_time: 0
                     }
                 ]}/>
-
                 <p>
                     Voila!  We have now decoupled ourselves from Galilean transformations, and are free to explore
                     any spacetime we please!  Like this one!  This exotic spacetime geometry works by... well...
                     actually, it doesn't seem to work all that differently, does it?  Why are our dots still so evenly
                     spaced out along the time axis?  Shouldn't it be the length along the <i>line</i> which is
-                    constant?  Take a minute and try to think about why this might be.  If you need a place to start,
-                    try to work out the distances between some pairs of dots using our distance equation.
+                    constant?  Take a minute and try to think about why this might be.  We have seen a problem like this
+                    before.
                 </p>
                 <p>
-                    Have you tried it yet?  If you tried working out the distance between two points,
-                    you may have noticed that you're missing a very important part of the equation: <i>c</i>, the
-                    conversion factor between meters and seconds!  I left this parameter at its real-world value, which
-                    is ~3x10<sup>8</sup> meters per second.  As a result, <i>c<sup>2</sup>&Delta;t<sup>2</sup></i>
-                    absolutely dominates the distance equation; <i>&Delta;x<sup>2</sup></i> is negligible in comparison.
-                    This incongruence gives rise to what appears to be a Galilean relationship between velocities.
-                    However, we can use <i>light-seconds</i> for the units on our x axis.  A light-second is the
-                    distance light travels in a single second.  Since we are using the speed of light as our conversion
-                    factor <i>c</i>, by definition, measuring our distance in light-seconds gives us a conversion factor
-                    <i>c</i> of 1 light-second per second:
+                    Got it yet?  It's okay if not.  Generations of scientists took centuries to solve this problem.  I
+                    only gave you a paragraph break.  But you did get the benefit of some priming: recall the line we
+                    saw on the ground.  Now, at last, that metaphor pays off.  The dots on the line <i>appear</i> to
+                    be moving in a straight line, but this only <i>appears</i> to be the case because our perspective
+                    is so small.  We are looking at a diagram plotting meters against seconds, but we have no idea how
+                    much a single meter along our spatial axis will offset our speed through time.  As it turns out, in
+                    real life, a meter is actually an extremely small unit of measurement compared to a second, which is
+                    why our dots' positions in time don't appear to change based on changes in distance.  But are they
+                    <i>really</i> moving in straight lines?  Or, just as when we tried following the line on the ground,
+                    is this just an appearance arising from our limited perspective?
                 </p>
-
+                <p>
+                    To answer this question, let's zoom out.
+                </p>
                 <SpacetimeDiagram allowPausing={false} id="pythagorean_spacetime" maxSpeed={3.14} step={.001} axisTicksX={10} showLightRays={false} transform={(theta, c) => {
                     return [
                         [cos(theta)/c, -sin(theta)],
@@ -819,50 +850,15 @@ class App extends React.Component {
                         proper_time: 0
                     }
                 ]}/>
-
-                <p>Now <i>there's</i> something interesting!  Fiddle around with the velocities a bit.  You'll find
-                that increasing the velocity of an object <i>rotates</i> its time axis rather than <i>sheering</i> it.
-                Velocity here represents not the straight-line distance between the objects at each time, but arc-length
-                between the objects over time as measured in the reference frame - i.e. the distance <i>along</i> the
-                circle around which they are rotating.</p>
-
-                <SpacetimeDiagram id="pythagorean_spacetime" maxSpeed={3.14} step={.001} axisTicksX={10} showLightRays={false} transform={(theta, c) => {
-                    return [
-                        [cos(theta)/c, -sin(theta)],
-                        [sin(theta),  cos(theta)]
-                    ]
-                }} translateVelocity={(v_frame, v_body, _) => v_body-v_frame} observers={[
-                    {
-                        name: "Observer A",
-                        relative_velocity: 0,
-                        proper_time: 0
-                    },
-                    {
-                        name: "Observer B",
-                        relative_velocity: .3,
-                        proper_time: 0
-                    },
-                    {
-                        name: "Observer C",
-                        relative_velocity: -.3,
-                        proper_time: 0
-                    }
-                ]}/>
-
-                <p>This is also representable as a system of equations (which, as promised, you are free to skip - just
-                calling it a "rotation" is enough):</p>
-
-                <Latex displayMode={true}>
-                    {"$\\begin{matrix}" +
-                        "x' = cos(\\theta)x/c - sin(\\theta)t\\\\" +
-                        "t' = sin(\\theta)x + cos(\\theta)t" +
-                    "\\end{matrix}" +
-                    "\\:or\\:" +
-                    "\\begin{bmatrix}" +
-                        "cos(\\theta)/c & -sin(\\theta)\\\\" +
-                        "sin(\\theta) & cos(\\theta)" +
-                    "\\end{bmatrix}$"}
-                </Latex>
+                <p>
+                    Now <i>there's</i> something interesting!  We've broadened our perspective significantly; the x axis
+                    is now measured in light-seconds, which is about 3x10<sup>8</sup> meters.  Fiddle around with the
+                    velocities a bit.  You'll find that increasing the velocity of an object <i>rotates</i> its time
+                    axis rather than <i>sheering</i> it.  The dot moves not along a straight line, but around the origin
+                    - in a circle!  Velocity here represents not the straight-line distance between the objects at each
+                    time, but the arc-length between the objects - i.e. the distance <i>along</i> the
+                    circle around which they are rotating.
+                </p>
 
                 <p>
                     Already we are uncovering some effects that have analogues in the theory of relativity.  For
@@ -871,12 +867,12 @@ class App extends React.Component {
                     together and thus <i>contracted</i>; their real-life counterparts appear <i>dilated</i> for very
                     similar reasons.
                 </p>
-
-                <p>Notice that if you crank the velocity, the line disappears below the x axis and pops up
-                on the other side!  This is the <i>flip-side</i> of the line; it represents the object's past. By doing
-                this, we have reversed the object's orientation along our time axis.  In other words, the object is
-                travelling backwards in time!</p>
-
+                <p>
+                    Notice that if you crank the velocity, the line disappears below the x axis and pops up
+                    on the other side!  This is the <i>flip-side</i> of the line; it represents the object's past. By doing
+                    this, we have reversed the object's orientation along our time axis.  In other words, the object is
+                    travelling backwards in time!
+                </p>
                 <p>
                     This is a neat little property, but don't get too excited.  We've called an axis on our graph
                     "time", but what's <b>time-like</b> about it, really?  It doesn't flow in a uniform direction.
@@ -884,10 +880,69 @@ class App extends React.Component {
                     so that it fits in exactly with the other spatial dimensions.  An object in this universe could
                     double back on itself and intersect with its own past - clearly a nonsensical property.  But this
                     is nonetheless a good thought experiment with which to introduce <b>spacetime</b> and <b>spacetime
-                    intervals</b>.  We will see shortly that our own spacetime has its own exotic properties which,
+                    intervals</b>.  We will see shortly that real spacetime has its own exotic properties which,
                     luckily for us, nonetheless preserve the causal structure of time.
                 </p>
+                <Collapsible trigger={(<h3>Spacetime Intervals: A Mathematical treatment</h3>)}>
+                    <Latex displayMode={true}>{'$\\Delta s = \\sqrt{\\Delta x^2+\\Delta y^2+\\Delta z^2}$'}</Latex>
+                    <p>
+                        To describe distance through space<i>time</i>, we could easily slip time into this equation:
+                    </p>
+                    <Latex displayMode={true}>{'$\\Delta s = \\sqrt{\\Delta x^2+\\Delta y^2+\\Delta z^2+c^2\\Delta t^2}$'}</Latex>
+                    <Latex>
+                        Where $$c$$ is an arbitrary constant for converting between units of time and units of space.  The
+                        fact that it shares a name with the speed of light is no accident, but we will get there later.
+                    </Latex>
+                    <p>
+                        Have you tried it yet?  If you tried working out the distance between two points,
+                        you may have noticed that you're missing a very important part of the equation: <i>c</i>, the
+                        conversion factor between meters and seconds!  I left this parameter at its real-world value, which
+                        is ~3x10<sup>8</sup> meters per second.  As a result, <i>c<sup>2</sup>&Delta;t<sup>2</sup></i>
+                        absolutely dominates the distance equation; <i>&Delta;x<sup>2</sup></i> is negligible in comparison.
+                        This incongruence gives rise to what appears to be a Galilean relationship between velocities.
+                        However, we can use <i>light-seconds</i> for the units on our x axis.  A light-second is the
+                        distance light travels in a single second.  Since we are using the speed of light as our conversion
+                        factor <i>c</i>, by definition, measuring our distance in light-seconds gives us a conversion factor
+                        <i>c</i> of 1 light-second per second:
+                    </p>
+                    <SpacetimeDiagram id="pythagorean_spacetime" maxSpeed={3.14} step={.001} axisTicksX={10} showLightRays={false} transform={(theta, c) => {
+                        return [
+                            [cos(theta)/c, -sin(theta)],
+                            [sin(theta),  cos(theta)]
+                        ]
+                    }} translateVelocity={(v_frame, v_body, _) => v_body-v_frame} observers={[
+                        {
+                            name: "Observer A",
+                            relative_velocity: 0,
+                            proper_time: 0
+                        },
+                        {
+                            name: "Observer B",
+                            relative_velocity: .3,
+                            proper_time: 0
+                        },
+                        {
+                            name: "Observer C",
+                            relative_velocity: -.3,
+                            proper_time: 0
+                        }
+                    ]}/>
 
+                    <p>This is also representable as a system of equations (which, as promised, you are free to skip - just
+                    calling it a "rotation" is enough):</p>
+
+                    <Latex displayMode={true}>
+                        {"$\\begin{matrix}" +
+                            "x' = cos(\\theta)x/c - sin(\\theta)t\\\\" +
+                            "t' = sin(\\theta)x + cos(\\theta)t" +
+                        "\\end{matrix}" +
+                        "\\:or\\:" +
+                        "\\begin{bmatrix}" +
+                            "cos(\\theta)/c & -sin(\\theta)\\\\" +
+                            "sin(\\theta) & cos(\\theta)" +
+                        "\\end{bmatrix}$"}
+                    </Latex>
+                </Collapsible>
                 <h2>A Rip in the Fabric</h2>
 
                 <p>
