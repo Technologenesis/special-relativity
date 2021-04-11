@@ -407,7 +407,12 @@ class App extends React.Component {
                     that symmetry is.
                 </p>
                 <p>
-                    In concrete terms, take a person, Alice, who is riding a train.  Ahead of her, through the window,
+                    Note, though, the situation we find ourselves in when we try to answer this question.  Just as when
+                    we stood over what we thought was a straight line drawn on the ground, it could be that we are
+                    not seeing some bigger picture.  But we will form a tentative model for now.
+                </p>
+                <p>
+                    Take a person, Alice, who is riding a train.  Ahead of her, through the window,
                     she sees Bob by the tracks.  He is standing still on the ground, but relative to Alice, he is moving
                     towards her at -9 meters per second. Alice throws an apple at 12 meters per second, relative to her,
                     towards Bob's head.  Assuming that all motion is happening in the same direction, how do we know how
@@ -436,7 +441,8 @@ class App extends React.Component {
                 ]}/>
 
                 <p>
-                We <i>can</i> do experiments to try to figure out the relationships between these perspectives.  Say
+                We have no a priori way of converting this scenario to Bob's perspective.  However, we can do
+                experiments to try to figure out the relationships between these perspectives.  Say
                 we set up some speed detector next to Bob and carry out the experiment again to see what happens.
                 </p>
                 <p>
@@ -491,12 +497,27 @@ class App extends React.Component {
 
                 <p>
                     This method of switching between inertial reference frames is called a
-                    <b>Galilean transformation</b>, and they form part of the foundation of Newtonian mechanics.  However,
-                    by Einstein's time there were some alarming discoveries in physics that seemed to defy this very basic
-                    principle: the laws of physics appeared to actually <i>change</i> based on inertial reference frame.
+                    <b>Galilean transformation</b>, and they form part of the foundation of Newtonian mechanics.  It is
+                    therefore asserted that the universe is <i>symmetric</i> under Galilean transformations.
+                    However, if you look closely, you will see that our "straight-line" example was more on the nose
+                    than you may have thought.  Observe how each dot simply slides to the side in a straight line when
+                    your perspective changes.
+                </p>
+                <p>
+                    This corresponds to a universal flow of time - one second in one object's perspective is the same
+                    as one second in everyone else's.  This seems like an extremely natural result of the universe's
+                    symmetry - why should time move faster in one perspective than the other?  After all, the universe
+                    is supposed to remain symmetric no matter your velocity.  And indeed, this was treated as a natural,
+                    fundamental property of the universe for a long time.  But we should beware that the smallness
+                    of our perspective doesn't lead us to accept unsure conclusions as forgone...
+                </p>
+                <p>
+                    By Einstein's time there were some alarming discoveries in physics that seemed to threaten the very
+                    symmetry of the universe itself: the laws of physics appeared to actually <i>change</i> based on inertial reference frame.
                     It appeared that for all the progress we had made in physics, something was wrong on the very
-                    fundamental level.  It turned out that this problem had its roots all the way down at the structure of
-                    space and time.
+                    fundamental level.  If we wanted a universe that was symmetric over changes in velocity, we were
+                    going to need a paradigm shift - as it turned out, one that revolutionized our understanding of
+                    the structure of space and time.
                 </p>
 
                 <Collapsible trigger={(<h3>Galilean Transformations: A Mathematical Treatment</h3>)}>
@@ -506,21 +527,36 @@ class App extends React.Component {
                         comfortable with simple math, I encourage you to read this section.  The symbols may be intimidating,
                         but the math itself is no more complicated than linear functions in pre-algebra.
                     </p>
-
                     <p>
-                        Take a reference frame, <i>S</i>, and some arbitrary coordinates in that frame <i>(x,y,z,t)</i>.
-                        Say we want to translate these coordinates to a new frame, S', which is identical to S except that
-                        it is moving relative to <i>S</i> with velocity <i>v</i> in the positive <i>x</i> direction.  We can
-                        do that transformation as follows:
+                        If you read the spiel about group theory, you know that all this talk about symmetry has to have
+                        an underlying mathematical formalism.  We have this thing called a <b>Galilean
+                        transformation</b> that we can supposedly do to our universe and leave it looking the same, as
+                        far as the laws of physics are concerned.  So let's start by talking about what those
+                        transformations are.
                     </p>
-
                     <p>
-                        x' = x-vt<br/>
-                        y' = y<br/>
-                        z' = z<br/>
-                        t' = t<br/>
+                        At their core, Galilean transformations are meant to describe how to convert between two
+                        coordinate systems (or <b>reference frames</b> which are moving relative to each other.  That
+                        motion is the only difference between the two frames; they start off with their clocks
+                        synchronized and in the exact same place, but one coordinate system is moving at a constant
+                        speed relative to the other, causing them to drift apart over time.
                     </p>
-
+                    <p>
+                        Take an some reference frame, <i>S</i>, and some arbitrary coordinates in that frame
+                        <i>(x,y,z,t)</i>. Say we want to translate these coordinates to a new frame, <i>S'</i>, which is
+                        identical to S except that
+                        it is moving relative to <i>S</i> with velocity <i>v</i> in the positive <i>x</i> direction.  A
+                        <b>Galilean transform</b> is a function of those coordinates<i>f(x,y,z,t)
+                        =(x',y',z',t')</i> where:
+                    </p>
+                    <Latex displayMode={true}>{
+                        "$\\begin{matrix}" +
+                            "x' = x-vt\\\\" +
+                            "y' = y\\\\" +
+                            "z' = z\\\\" +
+                            "t' = t\\\\" +
+                        "\\end{matrix}$"
+                    }</Latex>
                     <p>
                         We can ignore the middle two equations for now since they leave <i>y</i> and <i>z</i> unchanged.
                         Linear Algebra fans will recognize this as a <b>sheer transformation</b> representable by matrix
@@ -568,7 +604,6 @@ class App extends React.Component {
                         change in x' over the change in t', so this constant slope implies a constant velocity
                         <i>v'<sub>body</sub> = v<sub>body</sub>-v</i>
                     </p>
-
                     <SpacetimeDiagram showTimeOnAxis={true} animateAxisTime={false} showLightRays={false} maxSpeed={50} spaceUnits={"meters"} axisTicksX={80} c={Infinity} observers={[
                         {
                             name: "Frame S",
@@ -586,18 +621,42 @@ class App extends React.Component {
                             relative_velocity: 12
                         }
                     ]}/>
-
                     <p>
-                        This may seem like a long walk for a short drink of water, but that's only because in this case, the
-                        result happens to correspond to our intuition.  We will use similar logic later to uncover some of the
-                        bizarre properties of actual spacetime.
+                        So now we see what the purpose of a Galilean transform is, mathematically: they describe the
+                        act of moving from one perspective to the other.  You might guess, then, that these Galilean
+                        transforms are the elements of our group set <i>G</i>; and you would be correct.  Each transform
+                        represents a way in which you can switch inertial reference frame, under which the universe
+                        remains identical.  Just plug in the relative velocity of the frame you're switching into for
+                        <i>v</i> in the Galilean transform, solve the equations, and you're golden.
                     </p>
                     <p>
-                        Note that this math doesn't really correspond to a physical law; we aren't observing how objects
-                        <i>behave</i>.  We're describing how they <i>appear</i> to change based on our <i>perspective</i>.  It
-                        therefore more closely corresponds to the structure of space itself rather than the laws that govern
-                        its contents.
+                        Our composition operator &bull; will just be the act of applying one transform after another.
+                        Take two transforms, <i>A</i> and <i>B</i> such that (simplifying to one spatial dimension):
                     </p>
+                    <Latex displayMode={true}>{"$\\begin{matrix}" +
+                    "A(x, t) = (x-v_At, t)\\\\" +
+                    "B(x, t) = (x-v_Bt, t)" +
+                    "\\end{matrix}$ then we can apply both functions in secession to see the composition:" +
+                    "$(A \\cdot B)(x, t) = (x-[v_A+v_B]t, t)$"}</Latex>
+                    <p>
+                        In linear algebra parlance, each of these transforms can be represented as a matrix, and from
+                        that perspective our composition operator is simply matrix multiplication:
+                    </p>
+                    <Latex displayMode={true}>{
+                        "$A \\cdot B = \\begin{bmatrix}" +
+                        "1 & -v_A\\\\" +
+                        "0 & 1" +
+                        "\\end{bmatrix}" +
+                        "\\begin{bmatrix}" +
+                        "1 & -v_B\\\\" +
+                        "0 & 1" +
+                        "\\end{bmatrix}" +
+                        " = " +
+                        "\\begin{bmatrix}" +
+                        "1 & -(v_A+v_B)\\\\" +
+                        "0 & 1" +
+                        "\\end{bmatrix}$"
+                    }</Latex>
                 </Collapsible>
 
 
@@ -629,12 +688,11 @@ class App extends React.Component {
 
                 <p>
                 Notice that no matter how you adjust the object's relative speed, the dots on its line - its flow of
-                time - are equally spread along our graph's time axis.  Further, they always move at the same rate
-                with respect to the time axis.  This makes intuitive sense - it preserves a universal flow of time.  But
-                if we think of our diagram in terms of the stuff in the middle - <b>spacetime</b> - and think of
-                the distance the dots are travelling through it, we notice a strange property.  For very fast bodies,
-                the "dots" appear to move very quickly along the line - that is, they appear to <i>speed up</i> through
-                spacetime.
+                time - are equally spread along our graph's time axis.  This makes intuitive sense - it preserves a
+                universal flow of time.  But if we think of our diagram in terms of the stuff in the middle -
+                <b>spacetime</b> - and think of the distance the dots are travelling through it, we notice a strange
+                property.  For very fast bodies, the "dots" appear to move very quickly along the line - that is, they
+                appear to <i>speed up</i> through spacetime.
                 </p>
                 <p>
                 And yet, when we switch into that object's frame of reference, its dots are spread out only by the
@@ -855,9 +913,6 @@ class App extends React.Component {
                     based on any experiments.  It started only with two assumptions, and deduced the entire theory
                     from these: that the laws of physics are invariant under changes in inertial reference frame,
                     <i>and</i> the speed of light in a vacuum is constant for all observers.
-                </p>
-                <p>
-                    
                 </p>
 
                 <SpacetimeDiagram paused={false} showLightRays={false} maxSpeed={10} spaceUnits="meters" c={3e8} observers={[
