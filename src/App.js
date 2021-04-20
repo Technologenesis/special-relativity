@@ -660,7 +660,7 @@ class App extends React.Component {
                 </Collapsible>
 
 
-                <h3>Spacetime Intervals: an Early Introduction</h3>
+                <h3>Beyond Galilean Transformations: The Spacetime Interval</h3>
                 <p>
                 When we think about these Galilean Transformations, we might be tempted to ask why
                 that <i>particular</i> transformation makes so much intuitive sense to us, and what we might find if we
@@ -873,6 +873,28 @@ class App extends React.Component {
                     this, we have reversed the object's orientation along our time axis.  In other words, the object is
                     travelling backwards in time!
                 </p>
+                <SpacetimeDiagram id="pythagorean_spacetime" maxSpeed={3.14} step={.001} axisTicksX={10} showLightRays={false} transform={(theta, c) => {
+                    return [
+                        [cos(theta)/c, -sin(theta)],
+                        [sin(theta),  cos(theta)]
+                    ]
+                }} translateVelocity={(v_frame, v_body, _) => v_body-v_frame} observers={[
+                    {
+                        name: "Observer A",
+                        relative_velocity: 0,
+                        proper_time: 0
+                    },
+                    {
+                        name: "Observer B",
+                        relative_velocity: .3,
+                        proper_time: 0
+                    },
+                    {
+                        name: "Observer C",
+                        relative_velocity: -.3,
+                        proper_time: 0
+                    }
+                ]}/>
                 <p>
                     This is a neat little property, but don't get too excited.  We've called an axis on our graph
                     "time", but what's <b>time-like</b> about it, really?  It doesn't flow in a uniform direction.
@@ -884,27 +906,48 @@ class App extends React.Component {
                     luckily for us, nonetheless preserve the causal structure of time.
                 </p>
                 <Collapsible trigger={(<h3>Spacetime Intervals: A Mathematical treatment</h3>)}>
+                    <p>
+                        Let's think about what we just did from a mathematical perspective.  We are concerned with
+                        calculating distances through spacetime, so let's develop a vocabulary.  We will call the
+                        spacetime distance between two points <i>&Delta;s</i>, and the differences in their <i>x,</i>
+                        <i>y</i>, <i>z</i>, and <i>t</i> cooridinates will be called <i>&Delta;x</i>, <i>&Delta;y</i>,
+                        <i>&Delta;z</i>, and <i>&Delta;t</i>, respectively.  Under the Galilean model, we said that
+                        distance through spacetime depends only on time, so the spacetime interval is expressed rather
+                        easily:
+                    </p>
+                    <Latex displayMode={true}>$$\Delta s = \Delta t$$</Latex>
+                    <p>
+                        We imagined that distance
+                        through spacetime worked the same way as distance through space.  If you recall, in normal
+                        3D space, distance is represented by the Pythagorean theorem:
+                    </p>
                     <Latex displayMode={true}>{'$\\Delta s = \\sqrt{\\Delta x^2+\\Delta y^2+\\Delta z^2}$'}</Latex>
                     <p>
-                        To describe distance through space<i>time</i>, we could easily slip time into this equation:
+                        So, if we want to describe distance through space<i>time</i>, we could easily slip time into
+                        this equation:
                     </p>
                     <Latex displayMode={true}>{'$\\Delta s = \\sqrt{\\Delta x^2+\\Delta y^2+\\Delta z^2+c^2\\Delta t^2}$'}</Latex>
                     <Latex>
                         Where $$c$$ is an arbitrary constant for converting between units of time and units of space.  The
                         fact that it shares a name with the speed of light is no accident, but we will get there later.
+                        For now, we are using it only as a conversion constant.
                     </Latex>
                     <p>
-                        Have you tried it yet?  If you tried working out the distance between two points,
-                        you may have noticed that you're missing a very important part of the equation: <i>c</i>, the
-                        conversion factor between meters and seconds!  I left this parameter at its real-world value, which
-                        is ~3x10<sup>8</sup> meters per second.  As a result, <i>c<sup>2</sup>&Delta;t<sup>2</sup></i>
+                        For our demonstration, I left this parameter at its real-world value, which
+                        is ~3x10<sup>8</sup> meters per second.  As a result, when we're dealing with some small number
+                        of meters, <i>c<sup>2</sup>&Delta;t<sup>2</sup></i>
                         absolutely dominates the distance equation; <i>&Delta;x<sup>2</sup></i> is negligible in comparison.
-                        This incongruence gives rise to what appears to be a Galilean relationship between velocities.
-                        However, we can use <i>light-seconds</i> for the units on our x axis.  A light-second is the
+                        Clearly, we need a bigger unit of distance.  For this, we used the <b>light-second</b>.
+                    </p>
+                    <p>
+                        A light-second is the
                         distance light travels in a single second.  Since we are using the speed of light as our conversion
                         factor <i>c</i>, by definition, measuring our distance in light-seconds gives us a conversion factor
-                        <i>c</i> of 1 light-second per second:
+                        <i>c</i> of 1 light-second per second, which removes the distortion caused by converting between
+                        units and helps us to see that the simple, Pythagorean distance between dots is being held
+                        constant:
                     </p>
+
                     <SpacetimeDiagram id="pythagorean_spacetime" maxSpeed={3.14} step={.001} axisTicksX={10} showLightRays={false} transform={(theta, c) => {
                         return [
                             [cos(theta)/c, -sin(theta)],
@@ -928,9 +971,14 @@ class App extends React.Component {
                         }
                     ]}/>
 
-                    <p>This is also representable as a system of equations (which, as promised, you are free to skip - just
-                    calling it a "rotation" is enough):</p>
-
+                    <p>
+                        With this, we were able to flee the land of Galilean transforms.  But we are still clearly
+                        applying <i>some</i> transform... so what is it?  How does it relate back to the idea of symmetry
+                        from before?
+                    </p>
+                    <p>
+                        Just as in the Galilean case, we can represent our new transform as a system of equations:
+                    </p>
                     <Latex displayMode={true}>
                         {"$\\begin{matrix}" +
                             "x' = cos(\\theta)x/c - sin(\\theta)t\\\\" +
@@ -942,6 +990,10 @@ class App extends React.Component {
                             "sin(\\theta) & cos(\\theta)" +
                         "\\end{bmatrix}$"}
                     </Latex>
+                    <p>
+                        So, mathematically, we have found the new transformation under which we assert our universe
+                        to be symmetric.
+                    </p>
                 </Collapsible>
                 <h2>A Rip in the Fabric</h2>
 
@@ -967,26 +1019,228 @@ class App extends React.Component {
                     explanation could be given until Einstein published his paper on special relativity, which was not
                     based on any experiments.  It started only with two assumptions, and deduced the entire theory
                     from these: that the laws of physics are invariant under changes in inertial reference frame,
-                    <i>and</i> the speed of light in a vacuum is constant for all observers.
+                    <i>and</i> the speed of light in a vacuum is constant for all observers.  Taking these two
+                    assumptions, let's do a thought experiment.
                 </p>
-
-                <SpacetimeDiagram paused={false} showLightRays={false} maxSpeed={10} spaceUnits="meters" c={3e8} observers={[
+                <p>
+                    Let's go back to Alice and Bob.  Last time, we had Alice throw an apple at Bob, and the velocities
+                    appeared to simply add - clearly, though, this can't be how velocities <i>really</i> work - but our
+                    train and apple are far too slow to see this.  So instead, let's speed up our train to &frac12;c -
+                    half the speed of light, or 0.5 light-seconds per second.  And, instead of throwing an apple, we'll
+                    take it easy on Bob and simply shine a flashlight towards him.  Here's another spacetime diagram
+                    of the situation from Alice's point of view, like last time:
+                </p>
+                <SpacetimeDiagram allowPausing={false} showTimeDots={false} showControls={false} axisTicksX={10} showFrameSelector={false} showTimeOnAxis={true} showLightRays={false} velocityUnits={"c"} spaceUnits={"light-seconds"} c={Infinity} observers={[
                     {
-                        name: "Observer A",
+                        name: "Alice",
                         proper_time: 0,
                         relative_velocity: 0
                     },
                     {
-                        name: "Observer B",
+                        name: "Bob",
                         proper_time: 0,
-                        relative_velocity: 5
+                        relative_velocity: -.5
+                    },
+                    {
+                        name: "Light Ray",
+                        proper_time: 0,
+                        relative_velocity: 1
+                    }
+                ]}/>
+                <p>
+                    From Alice's perspective, the ray of light is moving at, well, the speed of light - one
+                    light-second per second.  But, clearly, our old method of switching between perspectives no longer
+                    works.  If we use it to switch to Bob's perspective, we see that the light ray is moving at
+                    1.5c - which violates our second assumption.
+                </p>
+                <SpacetimeDiagram allowPausing={false} showTimeDots={false} axisTicksX={10} showControls={false} showTimeOnAxis={true} showLightRays={false} velocityUnits={"c"} spaceUnits={"light-seconds"} c={Infinity} observers={[
+                    {
+                        name: "Bob",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    },
+                    {
+                        name: "Alice",
+                        proper_time: 0,
+                        relative_velocity: 0.5
+                    },
+                    {
+                        name: "Light Ray",
+                        proper_time: 0,
+                        relative_velocity: 1.5
+                    }
+                ]}/>
+                <p>
+                    So clearly, this is all wrong.  Our second assumption, that the speed of light is the same for all
+                    observers, tells us that even though Alice is already moving at half the speed of light, the light
+                    ray should appear to be moving at the exact same speed from Bob's perspective as it is in Alice's.
+                    Its velocity shouldn't add to Alice's the way it did before:
+                </p>
+                <SpacetimeDiagram allowPausing={false} showTimeDots={false} axisTicksX={10} showFrameSelector={false} showControls={false} showTimeOnAxis={true} showLightRays={false} velocityUnits={"c"} spaceUnits={"light-seconds"} c={Infinity} observers={[
+                    {
+                        name: "Bob",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    },
+                    {
+                        name: "Alice",
+                        proper_time: 0,
+                        relative_velocity: 0.5
+                    },
+                    {
+                        name: "Light Ray",
+                        proper_time: 0,
+                        relative_velocity: 1
+                    }
+                ]}/>
+                <p>
+                    So how can we make this make sense?  I mean, surely this breaks our symmetry, right?  To see why,
+                    imagine that instead of shining the light at Bob, Alice shines the light at the top of the train
+                    car.  For simplicity, we'll imagine that it's a <i>really</i> tall train car - one light-second
+                    tall, so tall that it takes the light one second to reach the ceiling from Alice's point of view.
+                </p>
+                <p>
+                    But from Bob's perspective outside the train, the light appears to travel more than one
+                    light-second.  To Bob, the train <i>itself</i> is moving at 0.5c.  This means that by the time the
+                    light reaches the top of the car, it will also have moved some distance in the direction of the
+                    train's motion.  And, since the light is moving at the same speed in Bob's frame as in Alice's, it
+                    must appear to <i>take longer</i> to reach the top of the car from Bob's
+                    perspective than from Alice's.
+                </p>
+                <p>
+                    Naively, then, we clearly see that symmetry is broken!  How can one observer see things happening
+                    more slowly than another one?  However, if we think carefully, we'll realize that we've seen a
+                    situation like this before.  We saw that under our Galilean transformations, time passes
+                    the same way no matter how fast you're going.  By contrast, in our Pythagorean spacetime, time
+                    seemed to tick by more quickly the faster an object was moving:
+                </p>
+                <SpacetimeDiagram maxSpeed={3.14} step={.001} axisTicksX={10} showLightRays={false} transform={(theta, c) => {
+                    return [
+                        [cos(theta)/c, -sin(theta)],
+                        [sin(theta),  cos(theta)]
+                    ]
+                }} translateVelocity={(v_frame, v_body, _) => v_body-v_frame} observers={[
+                    {
+                        name: "Observer A",
+                        relative_velocity: 0,
+                        proper_time: 0
+                    },
+                    {
+                        name: "Observer B",
+                        relative_velocity: .3,
+                        proper_time: 0
                     },
                     {
                         name: "Observer C",
-                        proper_time: 0,
-                        relative_velocity: -1
+                        relative_velocity: -.3,
+                        proper_time: 0
                     }
                 ]}/>
+                <p>
+                    Now, we seem to have the opposite effect: Bob sees the light take <i>longer</i> to reach the top of
+                    the car than Alice does.  So Alice's time must be ticking by <i>more slowly</i>.  We can do a bit of
+                    math to figure out exactly <i>how</i> much more slowly her time must be ticking, but of course,
+                    that bit is optional.  For now, let's focus on the visual intuition and add
+                    some dots to our diagram of the situation:
+                </p>
+                <SpacetimeDiagram showTimeDots={true} axisTicksX={10} showFrameSelector={false} showControls={false} showTimeOnAxis={true} velocityUnits={"c"} spaceUnits={"light-seconds"} c={1} observers={[
+                    {
+                        name: "Bob",
+                        proper_time: 0,
+                        relative_velocity: 0
+                    },
+                    {
+                        name: "Alice",
+                        proper_time: 0,
+                        relative_velocity: 0.5
+                    }
+                ]}/>
+                <p>
+                    This time, instead of showing the light ray as a moving body, we're including a couple of lines on
+                    each side to show the speed of light in each direction.  We can see that from Bob's perspective,
+                    Alice's time seems to tick by more slowly, because her time dots are more spread out along his
+                    time axis!  Alice appears to have undergone some sort of <i>time dilation</i>!
+                </p>
+                <p>
+                    Okay, so if the Galilean transforms represented a sort of <i>sheer</i> symmetry, and our Pythagorean
+                    spacetime exhibited <i>rotational</i> symmetry, what kind of symmetry is <i>this</i>?  If we
+                    are looking for some kind of transformation to represent changes in velocity, what kind of
+                    transformation can we use that would cause time to appear to dilate like this?
+                </p>
+
+                <Collapsible trigger={(<h3>Time Dilation: A Mathematical Treatment</h3>)}>
+                    <p>
+                        So just how slowly <i>does</i> Alice's time appear to tick by from Bob's perspective?  To figure
+                        this out, we should first identify just how far the light appears to travel from each point of
+                        view.  From Alice's perspective, this is easy: it just goes straight up to the top of the car, a
+                        distance of one light-second.
+                    </p>
+                    <p>
+                        From Bob's perspective, the light appears to follow a <i>diagonal</i> path to the top of the
+                        car, moving along in the direction of the train <i>as well as</i> upwards toward the car
+                        ceiling.  We know the light's total speed - <i>c</i>, one light-second per second - and we
+                        know that it's moving in the direction of the train's motion at the same speed as the train,
+                        0.5<i>c</i>.  We can think of this like a right triangle.  The light is moving at <i>c</i> along
+                        some diagonal path, representing the hypotenuse.  That motion can be decomposed into vertical
+                        and horizonal motion, representing the two right-angled sides of the triangle.  Since we know
+                        the light's speed along the hypotenuse and the horizontal side, we can find the speed along the
+                        vertical side using the Pythagorean theorem:
+                    </p>
+                    <Latex displayMode={true}>{
+                        "$\\begin{matrix}" +
+                            "x^2 + (0.5c)^2 = c^2\\\\" +
+                            "x^2 + 0.25c^2 = c^2\\\\" +
+                            "x^2 = 0.75c^2\\\\" +
+                            "x = \\sqrt{0.75}c\\\\" +
+                            "\\approx 0.866c" +
+                        "\\end{matrix}$"
+                    }</Latex>
+                    <p>
+                        So, if the light appears to be moving at ~.866c in the vertical direction from Bob's perspective,
+                        then in one second of Bob's time, only .866 seconds will appear to pass in Alice's.  We can
+                        generalize this to account for any relative velocity by simply replacing the velocity of our
+                        train, 0.5c, with a variable <i>v</i> representing any possible velocity:
+                    </p>
+                    <Latex displayMode={true}>{
+                        "$\\begin{matrix}" +
+                        "x^2 + v^2 = c^2\\\\" +
+                        "x^2 = c^2 - v^2\\\\" +
+                        "x = \\sqrt{c^2 - v^2}\\\\" +
+                        "\\end{matrix}$"
+                    }</Latex>
+                    <p>
+                        Where <i>x</i> represents the number of seconds which will appear to pass for a body moving
+                        at velocity <i>v</i> for each second that passes for a stationary observer.  This is more
+                        commonly written in the equivalent form:
+                    </p>
+                    <Latex displayMode={true}>{
+                        "$\\sqrt{1 - v^2/c^2}$"
+                    }</Latex>
+                    <p>
+                        Given this relationship, we can now build time dilation into our model of velocity!  We
+                        know how to calculate the rate of time passage for any object.  Try messing with the velocities
+                        in the diagram to see this in action:
+                    </p>
+                    <SpacetimeDiagram showTimeDots={true} axisTicksX={10} showFrameSelector={false} showTimeOnAxis={true} velocityUnits={"c"} spaceUnits={"light-seconds"} c={1} observers={[
+                        {
+                            name: "Bob",
+                            proper_time: 0,
+                            relative_velocity: 0
+                        },
+                        {
+                            name: "Alice",
+                            proper_time: 0,
+                            relative_velocity: 0.5
+                        }
+                    ]}/>
+                    <p>
+                        This expression is known as the Lorentz factor, and as you might guess, it is quite fundamental.
+                        Let's move on to the next section to see this...
+                    </p>
+
+                </Collapsible>
+
+                <h2>The Lorentz Transformation</h2>
             </div>
         );
     }
